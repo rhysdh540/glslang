@@ -231,6 +231,7 @@ void TParseVersions::initializeExtensionBehavior()
     extensionBehavior[E_GL_ARB_texture_query_lod]            = EBhDisable;
     extensionBehavior[E_GL_ARB_vertex_attrib_64bit]          = EBhDisable;
     extensionBehavior[E_GL_NV_gpu_shader5]                   = EBhDisable;
+    extensionBehavior[E_GL_NV_bindless_texture]              = EBhDisable;
     extensionBehavior[E_GL_ARB_draw_instanced]               = EBhDisable;
     extensionBehavior[E_GL_ARB_bindless_texture]             = EBhDisable;
     extensionBehavior[E_GL_ARB_fragment_coord_conventions]   = EBhDisable;
@@ -252,6 +253,8 @@ void TParseVersions::initializeExtensionBehavior()
 
     extensionBehavior[E_GL_EXT_shader_non_constant_global_initializers] = EBhDisable;
     extensionBehavior[E_GL_EXT_shader_image_load_formatted]             = EBhDisable;
+    extensionBehavior[E_GL_EXT_shader_image_load_store]                 = EBhDisable;
+    extensionBehavior[E_GL_EXT_gpu_shader4]                             = EBhDisable;
     extensionBehavior[E_GL_EXT_post_depth_coverage]                     = EBhDisable;
     extensionBehavior[E_GL_EXT_control_flow_attributes]                 = EBhDisable;
     extensionBehavior[E_GL_EXT_nonuniform_qualifier]                    = EBhDisable;

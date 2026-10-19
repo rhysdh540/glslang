@@ -183,6 +183,8 @@ const char* const E_GL_EXT_shader_atomic_int64              = "GL_EXT_shader_ato
 
 const char* const E_GL_EXT_shader_non_constant_global_initializers = "GL_EXT_shader_non_constant_global_initializers";
 const char* const E_GL_EXT_shader_image_load_formatted = "GL_EXT_shader_image_load_formatted";
+const char* const E_GL_EXT_shader_image_load_store          = "GL_EXT_shader_image_load_store";
+const char* const E_GL_EXT_gpu_shader4                      = "GL_EXT_gpu_shader4";
 
 const char* const E_GL_EXT_shader_16bit_storage             = "GL_EXT_shader_16bit_storage";
 const char* const E_GL_EXT_shader_8bit_storage              = "GL_EXT_shader_8bit_storage";
@@ -303,6 +305,7 @@ const char* const E_GL_NV_cluster_acceleration_structure        = "GL_NV_cluster
 const char* const E_GL_NV_linear_swept_spheres                  = "GL_NV_linear_swept_spheres";
 const char* const E_GL_NV_desktop_lowp_mediump                  = "GL_NV_desktop_lowp_mediump";
 const char* const E_GL_NV_gpu_shader5                           = "GL_NV_gpu_shader5";
+const char* const E_GL_NV_bindless_texture                      = "GL_NV_bindless_texture";
 const char* const E_GL_NV_push_constant_bank                    = "GL_NV_push_constant_bank";
 const char* const E_GL_NV_explicit_typecast                     = "GL_NV_explicit_typecast";
 
