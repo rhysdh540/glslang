@@ -461,7 +461,7 @@ public:
             variables.back().topLevelArraySize = topLevelArraySize;
             variables.back().topLevelArrayStride = topLevelArrayStride;
 
-            if ((reflection.options & EShReflectionAllBlockVariables) && active) {
+            if (active) {
                 EShLanguageMask& stages = variables.back().stages;
                 stages = static_cast<EShLanguageMask>(stages | 1 << intermediate.getStage());
             }
@@ -471,7 +471,7 @@ public:
                 reflectedArraySize = std::max(arraySize, reflectedArraySize);
             }
 
-            if ((reflection.options & EShReflectionAllBlockVariables) && active) {
+            if (active) {
               EShLanguageMask& stages = variables[it->second].stages;
               stages = static_cast<EShLanguageMask>(stages | 1 << intermediate.getStage());
             }
@@ -1166,22 +1166,6 @@ void TReflection::buildCounterIndices(const TIntermediate& intermediate)
 #endif
 }
 
-// build Shader Stages mask for all uniforms
-void TReflection::buildUniformStageMask(const TIntermediate& intermediate)
-{
-    if (options & EShReflectionAllBlockVariables)
-        return;
-
-    for (int i = 0; i < int(indexToUniform.size()); ++i) {
-        indexToUniform[i].stages = static_cast<EShLanguageMask>(indexToUniform[i].stages | 1 << intermediate.getStage());
-    }
-
-    for (int i = 0; i < int(indexToBufferVariable.size()); ++i) {
-        indexToBufferVariable[i].stages =
-            static_cast<EShLanguageMask>(indexToBufferVariable[i].stages | 1 << intermediate.getStage());
-    }
-}
-
 // Merge live symbols from 'intermediate' into the existing reflection database.
 //
 // Returns false if the input is too malformed to do this.
@@ -1239,7 +1223,6 @@ bool TReflection::addStage(EShLanguage stage, const TIntermediate& intermediate)
     it.updateStageMasks = true;
 
     buildCounterIndices(intermediate);
-    buildUniformStageMask(intermediate);
 
     return true;
 }

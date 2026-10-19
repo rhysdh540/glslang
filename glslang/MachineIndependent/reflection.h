@@ -179,7 +179,6 @@ protected:
     friend class glslang::TReflectionTraverser;
 
     void buildCounterIndices(const TIntermediate&);
-    void buildUniformStageMask(const TIntermediate& intermediate);
     void buildAttributeReflection(EShLanguage, const TIntermediate&);
 
     // Need a TString hash: typedef std::unordered_map<TString, int> TNameToIndex;
