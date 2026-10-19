@@ -1157,6 +1157,7 @@ void TIntermediate::mergeLinkerObjects(TInfoSink& infoSink, TIntermSequence& lin
                     auto checkName = [this, unitSymbol, &infoSink](const TString& name) {
                         for (unsigned int i = 0; i < unitSymbol->getType().getStruct()->size(); ++i) {
                             if (name == (*unitSymbol->getType().getStruct())[i].type->getFieldName()
+                                && (*unitSymbol->getType().getStruct())[i].type->getQualifier().builtIn == EbvNone
                                 && !((*unitSymbol->getType().getStruct())[i].type->getQualifier().hasLocation()
                                     || unitSymbol->getType().getQualifier().hasLocation())
                                 ) {
