@@ -7401,7 +7401,8 @@ void TParseContext::setLayoutQualifier(const TSourceLoc& loc, TPublicType& publi
         return;
     }
     if (id == TQualifier::getLayoutPackingString(ElpScalar)) {
-        requireVulkan(loc, "scalar");
+        if (spvVersion.spv != 0)
+            requireVulkan(loc, "scalar");
         requireExtensions(loc, 1, &E_GL_EXT_scalar_block_layout, "scalar block layout");
         publicType.qualifier.layoutPacking = ElpScalar;
         return;
@@ -7431,7 +7432,8 @@ void TParseContext::setLayoutQualifier(const TSourceLoc& loc, TPublicType& publi
         return;
     }
     if (id == "buffer_reference") {
-        requireVulkan(loc, "buffer_reference");
+        if (spvVersion.spv != 0)
+            requireVulkan(loc, "buffer_reference");
         requireExtensions(loc, 1, &E_GL_EXT_buffer_reference, "buffer_reference");
         publicType.qualifier.layoutBufferReference = true;
         intermediate.setUseStorageBuffer();
