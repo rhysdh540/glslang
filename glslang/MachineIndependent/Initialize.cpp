@@ -1929,7 +1929,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
 
                 "\n");
         }
-        if (profile != EEsProfile && version == 450) {
+        if (profile != EEsProfile && version >= 300) {
             commonBuiltins.append(
                 "uint atomicCounterAddARB(atomic_uint, uint);"
                 "uint atomicCounterSubtractARB(atomic_uint, uint);"
@@ -1972,6 +1972,20 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
                 "uint atomicCounterIncrement(volatile coherent nontemporal uint);"
                 "uint atomicCounterDecrement(volatile coherent nontemporal uint);"
                 "uint atomicCounter(volatile coherent nontemporal uint);"
+
+                "\n");
+        }
+        if (profile != EEsProfile && version >= 300) {
+            commonBuiltins.append(
+                "uint atomicCounterAddARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterSubtractARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterMinARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterMaxARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterAndARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterOrARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterXorARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterExchangeARB(volatile coherent nontemporal uint, uint);"
+                "uint atomicCounterCompSwapARB(volatile coherent nontemporal uint, uint, uint);"
 
                 "\n");
         }
@@ -9856,7 +9870,7 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
         }
 
         // E_GL_ARB_shader_atomic_counter_ops
-        if (profile != EEsProfile && version == 450) {
+        if (profile != EEsProfile && version >= 300) {
             symbolTable.setFunctionExtensions("atomicCounterAddARB"     , 1, &E_GL_ARB_shader_atomic_counter_ops);
             symbolTable.setFunctionExtensions("atomicCounterSubtractARB", 1, &E_GL_ARB_shader_atomic_counter_ops);
             symbolTable.setFunctionExtensions("atomicCounterMinARB"     , 1, &E_GL_ARB_shader_atomic_counter_ops);
@@ -11383,7 +11397,7 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
     symbolTable.relateToOperator("clockRealtimeEXT",     EOpReadClockDeviceKHR);
     symbolTable.relateToOperator("clockRealtime2x32EXT", EOpReadClockDeviceKHR);
 
-    if (profile != EEsProfile && version == 450) {
+    if (profile != EEsProfile && version >= 300) {
         symbolTable.relateToOperator("atomicCounterAddARB",      EOpAtomicCounterAdd);
         symbolTable.relateToOperator("atomicCounterSubtractARB", EOpAtomicCounterSubtract);
         symbolTable.relateToOperator("atomicCounterMinARB",      EOpAtomicCounterMin);
@@ -11422,6 +11436,15 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
         symbolTable.relateToOperator("atomicCounterXor", EOpAtomicXor);
         symbolTable.relateToOperator("atomicCounterExchange", EOpAtomicExchange);
         symbolTable.relateToOperator("atomicCounterCompSwap", EOpAtomicCompSwap);
+        symbolTable.relateToOperator("atomicCounterAddARB", EOpAtomicAdd);
+        symbolTable.relateToOperator("atomicCounterSubtractARB", EOpAtomicSubtract);
+        symbolTable.relateToOperator("atomicCounterMinARB", EOpAtomicMin);
+        symbolTable.relateToOperator("atomicCounterMaxARB", EOpAtomicMax);
+        symbolTable.relateToOperator("atomicCounterAndARB", EOpAtomicAnd);
+        symbolTable.relateToOperator("atomicCounterOrARB", EOpAtomicOr);
+        symbolTable.relateToOperator("atomicCounterXorARB", EOpAtomicXor);
+        symbolTable.relateToOperator("atomicCounterExchangeARB", EOpAtomicExchange);
+        symbolTable.relateToOperator("atomicCounterCompSwapARB", EOpAtomicCompSwap);
     }
 
     symbolTable.relateToOperator("fma",               EOpFma);

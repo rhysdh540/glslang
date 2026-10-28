@@ -3794,8 +3794,9 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
             const TType* refType = (base->getType().isReference()) ? base->getType().getReferentType() : nullptr;
             const TQualifier& qualifier =
                 (refType != nullptr) ? refType->getQualifier() : base->getType().getQualifier();
+            bool counter = spvVersion.vulkanRelaxed && qualifier.storage == EvqInOut && qualifier.volatil;
             if (qualifier.storage != EvqShared && qualifier.storage != EvqBuffer &&
-                qualifier.storage != EvqtaskPayloadSharedEXT)
+                qualifier.storage != EvqtaskPayloadSharedEXT && !counter)
                 error(loc, errMsg, fnCandidate.getName().c_str(), "");
         } else {
             error(loc, errMsg, fnCandidate.getName().c_str(), "");
@@ -9774,6 +9775,11 @@ void TParseContext::vkRelaxedRemapUniformMembers(const TSourceLoc& loc, const TP
 
 void TParseContext::vkRelaxedRemapFunctionParameter(TFunction* function, TParameter& param, std::vector<int>* newParams)
 {
+    if (param.type->getBasicType() == EbtAtomicUint) {
+        param.type->setBasicType(EbtUint);
+        param.type->getQualifier().storage = EvqInOut;
+        param.type->getQualifier().volatil = true;
+    }
     function->addParameter(param);
 
     if (!param.type->isStruct() || !param.type->containsOpaque())
