@@ -9033,29 +9033,32 @@ const TFunction* TParseContext::findFunction(const TSourceLoc& loc, const TFunct
             return symbol->getAsFunction();
     }
 
-    bool explicitTypesEnabled = extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types) ||
-                                extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int8) ||
-                                extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int16) ||
-                                extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int32) ||
-                                extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int64) ||
-                                extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_float16) ||
-                                extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_float32) ||
-                                extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_float64);
+    if (functionRulesAt != extensionChanges) {
+        functionRulesAt = extensionChanges;
+        explicitTypesEnabled = extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types) ||
+                               extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int8) ||
+                               extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int16) ||
+                               extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int32) ||
+                               extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int64) ||
+                               extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_float16) ||
+                               extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_float32) ||
+                               extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_float64);
+        implicitConversionsEnabled = extensionTurnedOn(E_GL_EXT_shader_implicit_conversions);
+        findFunction400Enabled = extensionTurnedOn(E_GL_ARB_gpu_shader_fp64) ||
+                                 extensionTurnedOn(E_GL_ARB_gpu_shader5) ||
+                                 extensionTurnedOn(E_GL_NV_gpu_shader5);
+    }
 
     if (isEsProfile())
         function = (explicitTypesEnabled && version >= 310)
                    ? findFunctionExplicitTypes(loc, call, builtIn)
-                   : ((extensionTurnedOn(E_GL_EXT_shader_implicit_conversions) && version >= 310)
+                   : ((implicitConversionsEnabled && version >= 310)
                       ? findFunction120(loc, call, builtIn)
                       : findFunctionExact(loc, call, builtIn));
     else if (version < 120)
         function = findFunctionExact(loc, call, builtIn);
-    else if (version < 400) {
-        bool needfindFunction400 = extensionTurnedOn(E_GL_ARB_gpu_shader_fp64)
-                                  || extensionTurnedOn(E_GL_ARB_gpu_shader5)
-                                  || extensionTurnedOn(E_GL_NV_gpu_shader5);
-        function = needfindFunction400 ? findFunction400(loc, call, builtIn) : findFunction120(loc, call, builtIn);
-    }
+    else if (version < 400)
+        function = findFunction400Enabled ? findFunction400(loc, call, builtIn) : findFunction120(loc, call, builtIn);
     else if (explicitTypesEnabled)
         function = findFunctionExplicitTypes(loc, call, builtIn);
     else

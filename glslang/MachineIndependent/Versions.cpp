@@ -1029,7 +1029,7 @@ void TParseVersions::ppRequireExtensions(const TSourceLoc& loc, int numExtension
 
 TExtensionBehavior TParseVersions::getExtensionBehavior(const char* extension)
 {
-    auto iter = extensionBehavior.find(TString(extension));
+    auto iter = extensionBehavior.find(extension);
     if (iter == extensionBehavior.end())
         return EBhMissing;
     else
@@ -1185,6 +1185,8 @@ void TParseVersions::updateExtensionBehavior(int line, const char* extension, co
 
 void TParseVersions::updateExtensionBehavior(const char* extension, TExtensionBehavior behavior)
 {
+    ++extensionChanges;
+
     // Update the current behavior
     if (strcmp(extension, "all") == 0) {
         // special case for the 'all' extension; apply it to every extension present
@@ -1197,7 +1199,7 @@ void TParseVersions::updateExtensionBehavior(const char* extension, TExtensionBe
         }
     } else {
         // Do the update for this single extension
-        auto iter = extensionBehavior.find(TString(extension));
+        auto iter = extensionBehavior.find(extension);
         if (iter == extensionBehavior.end()) {
             switch (behavior) {
             case EBhRequire:

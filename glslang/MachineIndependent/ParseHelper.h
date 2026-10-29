@@ -586,6 +586,10 @@ protected:
     TQualifier globalSharedDefaults;
     TString currentCaller;        // name of last function body entered (not valid when at global scope)
     int* atomicUintOffsets;       // to become an array of the right size to hold an offset per binding point
+    int functionRulesAt = -1;
+    bool explicitTypesEnabled = false;
+    bool implicitConversionsEnabled = false;
+    bool findFunction400Enabled = false;
     bool anyIndexLimits;
     bool khrDerivativeLayoutQualifierSpecified;
     TIdSetType inductiveLoopIds;
