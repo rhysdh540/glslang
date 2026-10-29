@@ -1411,6 +1411,7 @@ precise_qualifier
         parseContext.profileRequires($1.loc, EEsProfile, 320, Num_AEP_gpu_shader5, AEP_gpu_shader5, "precise");
         $$.init($1.loc);
         $$.qualifier.noContraction = true;
+        parseContext.intermediate.setUsePrecise();
     }
     ;
 

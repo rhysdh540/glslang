@@ -2934,7 +2934,8 @@ bool TIntermediate::postProcess(TIntermNode* root, EShLanguage language)
         aggRoot->setOperator(EOpSequence);
 
     // Propagate 'noContraction' label in backward from 'precise' variables.
-    glslang::PropagateNoContraction(*this);
+    if (usingPrecise())
+        glslang::PropagateNoContraction(*this);
 
     if (invertY && getSource() == EShSourceGlsl &&
         (language == EShLangVertex ||

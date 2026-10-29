@@ -358,6 +358,7 @@ public:
         hlslOffsets(false),
         hlslIoMapping(false),
         useVariablePointers(false),
+        usePrecise(false),
         bindingsPerResourceType(false),
         textureSamplerTransformMode(EShTexSampTransKeep),
         needToLegalize(false),
@@ -862,6 +863,8 @@ public:
     }
 
     bool usingVariablePointers() const { return useVariablePointers; }
+    void setUsePrecise() { usePrecise = true; }
+    bool usingPrecise() const { return usePrecise; }
 
     void setBindingsPerResourceType()
     {
@@ -1359,6 +1362,7 @@ protected:
     bool hlslOffsets;
     bool hlslIoMapping;
     bool useVariablePointers;
+    bool usePrecise;
     bool bindingsPerResourceType;
 
     std::set<TString> semanticNameSet;

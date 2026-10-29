@@ -7578,6 +7578,7 @@ yyreduce:
         parseContext.profileRequires((yyvsp[0].lex).loc, EEsProfile, 320, Num_AEP_gpu_shader5, AEP_gpu_shader5, "precise");
         (yyval.interm.type).init((yyvsp[0].lex).loc);
         (yyval.interm.type).qualifier.noContraction = true;
+        parseContext.intermediate.setUsePrecise();
     }
 #line 7583 "MachineIndependent/glslang_tab.cpp"
     break;
