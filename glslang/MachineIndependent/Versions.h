@@ -158,6 +158,7 @@ const char* const E_GL_ARB_uniform_buffer_object        = "GL_ARB_uniform_buffer
 const char* const E_GL_ARB_sample_shading               = "GL_ARB_sample_shading";
 const char* const E_GL_ARB_shader_bit_encoding          = "GL_ARB_shader_bit_encoding";
 const char* const E_GL_ARB_shader_image_size            = "GL_ARB_shader_image_size";
+const char* const E_GL_ARB_arrays_of_arrays             = "GL_ARB_arrays_of_arrays";
 const char* const E_GL_ARB_shader_storage_buffer_object = "GL_ARB_shader_storage_buffer_object";
 const char* const E_GL_ARB_shading_language_packing     = "GL_ARB_shading_language_packing";
 const char* const E_GL_ARB_texture_query_lod            = "GL_ARB_texture_query_lod";

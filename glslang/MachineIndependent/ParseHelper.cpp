@@ -6230,7 +6230,7 @@ void TParseContext::arrayOfArrayVersionCheck(const TSourceLoc& loc, const TArray
 
     requireProfile(loc, EEsProfile | ECoreProfile | ECompatibilityProfile, feature);
     profileRequires(loc, EEsProfile, 310, nullptr, feature);
-    profileRequires(loc, ECoreProfile | ECompatibilityProfile, 430, nullptr, feature);
+    profileRequires(loc, ECoreProfile | ECompatibilityProfile, 430, E_GL_ARB_arrays_of_arrays, feature);
 }
 
 //
