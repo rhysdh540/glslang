@@ -1218,12 +1218,27 @@ void TParseContext::blockMemberExtensionCheck(const TSourceLoc& loc, const TInte
         requireExtensions(loc, variable->getNumMemberExtensions(member), variable->getMemberExtensions(member), memberName.c_str());
 }
 
+static void reservedWordCheck(TParseContext& parseContext, const TSourceLoc& loc, const TString& identifier)
+{
+    if (parseContext.isEsProfile() || parseContext.spvVersion.spv != 0 || parseContext.symbolTable.atBuiltInLevel())
+        return;
+
+    const bool layout = identifier == "packed" || identifier == "row_major";
+    const bool image = identifier == "image1DShadow" || identifier == "image2DShadow" ||
+                       identifier == "image1DArrayShadow" || identifier == "image2DArrayShadow";
+    if ((layout && parseContext.version >= 140 && parseContext.version <= 430) ||
+        (image && parseContext.version >= 130 && parseContext.version <= 410))
+        parseContext.error(loc, "Reserved word.", identifier.c_str(), "");
+}
+
 //
 // Handle seeing a function declarator in the grammar.  This is the precursor
 // to recognizing a function prototype or function definition.
 //
 TFunction* TParseContext::handleFunctionDeclarator(const TSourceLoc& loc, TFunction& function, bool prototype)
 {
+    reservedWordCheck(*this, loc, function.getName());
+
     // ES can't declare prototypes inside functions
     if (! symbolTable.atGlobalLevel())
         requireProfile(loc, ~EEsProfile, "local function declaration");
@@ -4772,8 +4787,11 @@ void TParseContext::reservedErrorCheck(const TSourceLoc& loc, const TString& ide
             else
                 warn(loc, "identifiers containing consecutive underscores (\"__\") are reserved", identifier.c_str(), "");
         }
+
+        reservedWordCheck(*this, loc, identifier);
     }
 }
+
 
 //
 // Reserved errors for the preprocessor.
@@ -7035,10 +7053,13 @@ void TParseContext::structTypeCheck(const TSourceLoc& /*loc*/, TPublicType& publ
 {
     const TTypeList& typeList = *publicType.userDef->getStruct();
 
+    reservedWordCheck(*this, publicType.loc, publicType.userDef->getTypeName());
+
     // fix and check for member storage qualifiers and types that don't belong within a structure
     for (unsigned int member = 0; member < typeList.size(); ++member) {
         TQualifier& memberQualifier = typeList[member].type->getQualifier();
         const TSourceLoc& memberLoc = typeList[member].loc;
+        reservedWordCheck(*this, memberLoc, typeList[member].type->getFieldName());
         if (memberQualifier.isAuxiliary() ||
             memberQualifier.isInterpolation() ||
             (memberQualifier.storage != EvqTemporary && memberQualifier.storage != EvqGlobal &&
