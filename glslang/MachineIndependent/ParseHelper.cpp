@@ -6683,7 +6683,7 @@ void TParseContext::redeclareBuiltinBlock(const TSourceLoc& loc, TTypeList& newT
 {
     const char* feature = "built-in block redeclaration";
     profileRequires(loc, EEsProfile, 320, Num_AEP_shader_io_blocks, AEP_shader_io_blocks, feature);
-    profileRequires(loc, ~EEsProfile, 410, E_GL_ARB_separate_shader_objects, feature);
+    profileRequires(loc, ~EEsProfile, spvVersion.spv == 0 ? 150 : 410, E_GL_ARB_separate_shader_objects, feature);
 
     if (blockName != "gl_PerVertex" && blockName != "gl_PerFragment" &&
         blockName != "gl_MeshPerVertexNV" && blockName != "gl_MeshPerPrimitiveNV" &&
