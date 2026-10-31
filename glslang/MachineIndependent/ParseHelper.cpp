@@ -7073,6 +7073,8 @@ void TParseContext::structTypeCheck(const TSourceLoc& /*loc*/, TPublicType& publ
         }
         if (memberQualifier.invariant)
             error(memberLoc, "cannot use invariant qualifier on structure members", typeList[member].type->getFieldName().c_str(), "");
+        if (memberQualifier.isNoContraction() && spvVersion.spv == 0)
+            error(memberLoc, "cannot use precise qualifier on structure members", typeList[member].type->getFieldName().c_str(), "");
     }
 }
 
