@@ -801,6 +801,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.coopmatKHR_constructor.comp",
         "spv.coopmatKHR_constructorError.comp",
         "spv.coopmatKHR_matmuladd_Error.comp",
+        "spv.coopmatKHR_layoutError.comp",
         "spv.coopvec.comp",
         "spv.coopvec2.comp",
         "spv.coopvecloadstore.comp",
@@ -809,6 +810,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.coopvecStoreLocal.comp",
         "spv.coopvecTraining.comp",
         "spv.coopvecTraining_Error.comp",
+        "spv.coopvecBuiltinsConst.comp",
         "spv.intcoopmat.comp",
         "spv.intrinsicsInteractWithCoopMat.comp",
         "spv.longVector.comp",
@@ -824,6 +826,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.longVectorBadParams.constructors.comp",
         "spv.longVectorBadParams.constructors.as.type.comp",
         "spv.longVectorBadParams.index.comp",
+        "spv.longVectorBadParams.mixedShape.comp",
         "spv.longVectorBuiltins.comp",
         "spv.longVectorBuiltinsfp16.comp",
         "spv.longVectorBuiltinsfp64.comp",
@@ -839,6 +842,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.longVectorBuiltinsError.comp",
         "spv.longVectorBuiltinsSpecConst.comp",
         "spv.longVectorBuiltinsSpecConstint32.comp",
+        "spv.longVectorBuiltinsConst.comp",
         "spv.longVectorBuiltinsSubgroup.comp",
         "spv.longVectorBuiltins.frag",
         "spv.longVectorStorage.comp",
@@ -942,6 +946,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.nv.hitobject-allops.rgen",
         "spv.nv.hitobject-allops.rchit",
         "spv.nv.hitobject-allops.rmiss",
+        "spv.nv.hitobject-time.rgen",
 
         // SPV_EXT_shader_execution_reorder
 
@@ -949,6 +954,8 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.ext.hitobject-allops.rgen",
         "spv.ext.hitobject-allops.rchit",
         "spv.ext.hitobject-allops.rmiss",
+        "spv.ext.hitobject-time.rgen",
+        "spv.ext.hitobject-positions.rchit",
 
         // SPV_NV_displacement_micromap
 
@@ -1001,6 +1008,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.structuredDescriptorHeap.Buffer.comp",
         "spv.structuredDescriptorHeap.Uniform.comp",
         "spv.structuredDescriptorHeap.BufferReference.comp",
+        "spv.structuredDescriptorHeap.DescriptorSize.comp",
         "spv.structuredDescriptorHeap.LayoutQualifiers.comp",
         "spv.structuredDescriptorHeap.ReadOnly.comp",
         "spv.structuredDescriptorHeap.ReadOnly.error.comp",
@@ -1053,6 +1061,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.1.6.helperInvocation.frag",
         "spv.1.6.helperInvocation.memmodel.frag",
         "spv.1.6.specConstant.comp",
+        "spv.intrinsicsSpirvExecutionModeId.comp",
         "spv.1.6.samplerBuffer.frag",
         "spv.1.6.separate.frag",
         "spv.1.6.quad.frag",
@@ -1373,6 +1382,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.debuginfo.rt_types.glsl.rgen",
         "spv.debuginfo.rt_nv_builtins.glsl.rahit",
         "spv.debuginfo.rt_ext_builtins.glsl.rahit",
+        "spv.debuginfo.descriptorHeap.glsl.frag",
     })),
     FileNameAsCustomTestSuffix
 );

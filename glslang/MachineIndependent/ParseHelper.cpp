@@ -1620,6 +1620,10 @@ TIntermTyped* TParseContext::handleFunctionCall(const TSourceLoc& loc, TFunction
                 TType longVectorResultType(EbtVoid);
                 handleLongVectorBuiltin(loc, fnCandidate, &longVectorResultType, arguments);
                 result->setType(longVectorResultType);
+                // The type was copied from an argument; a const argument must not make
+                // an unfolded call look like a constant.
+                if (result->getAsConstantUnion() == nullptr)
+                    result->getWritableType().getQualifier().makeTemporary();
             }
 
             // Convert 'out' arguments.  If it was a constant folded built-in, it won't be an aggregate anymore.
@@ -1640,10 +1644,15 @@ TIntermTyped* TParseContext::handleFunctionCall(const TSourceLoc& loc, TFunction
 
             if (result->getAsTyped()->getType().isCoopVecOrLongVector() &&
                !result->getAsTyped()->getType().isParameterized()) {
-                if (auto unaryNode = result->getAsUnaryNode())
-                    result->setType(unaryNode->getOperand()->getAsTyped()->getType());
-                else
-                    result->setType(result->getAsAggregate()->getSequence()[0]->getAsTyped()->getType());
+                // Take the type parameters from the first argument. The result may already
+                // be a folded constant rather than an aggregate, and a const argument must
+                // not make an unfolded call look like a constant.
+                const TIntermTyped* firstArg = fnCandidate->getParamCount() == 1 || !arguments->getAsAggregate()
+                                                   ? arguments->getAsTyped()
+                                                   : arguments->getAsAggregate()->getSequence()[0]->getAsTyped();
+                result->setType(firstArg->getType());
+                if (result->getAsConstantUnion() == nullptr)
+                    result->getWritableType().getQualifier().makeTemporary();
             }
 
             if (fnCandidate->getBuiltInOp() == EOpConstructSaturated) {
@@ -4023,6 +4032,9 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
         } else {
             error(loc, errMsg, fnCandidate.getName().c_str(), "");
         }
+        if ((callNode.getOp() == EOpCooperativeMatrixLoad || callNode.getOp() == EOpCooperativeMatrixStore) &&
+            !(*argp)[4]->getAsTyped()->getType().getQualifier().isConstant())
+            error(loc, "argument must be compile-time constant", "matrixLayout", "");
     }
     break;
     case EOpCooperativeMatrixTransposeNV:
@@ -4149,7 +4161,7 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
             if (!opArg) {
                 error(loc, "tensor operands argument must be a constant integral expression", "tensorOps", "");
             }
-            const unsigned int ops = opArg ? opArg->getConstArray()[0].getUConst() : 0;
+            const unsigned int ops = opArg ? opArg->getConstArray()[0].getUConst() : 0u;
             const int gl_TensorOperandsOutOfBoundsValueARM = 0x2;
             if (ops & gl_TensorOperandsOutOfBoundsValueARM) {
                 // Out-of-bounds values can only be used with reads.
@@ -9564,7 +9576,7 @@ void TParseContext::typeParametersCheck(const TSourceLoc& loc, const TPublicType
         if (publicType.typeParameters && publicType.typeParameters->arraySizes->getNumDims() < 7) {
             uint32_t numDims = publicType.typeParameters->arraySizes->getNumDims();
             while (numDims < 7) {
-                uint32_t dim = (numDims == 1) ? 0 : (numDims - 2);
+                uint32_t dim = (numDims == 1) ? 0u : (numDims - 2);
                 publicType.typeParameters->arraySizes->addInnerSize(dim);
                 numDims++;
             }
@@ -12609,10 +12621,10 @@ const TTypeList* TParseContext::recordStructCopy(TStructRecord& record, const TT
     size_t originHash = 0, tmpHash = 0;
     std::hash<size_t> hasher;
     for (size_t i = 0; i < memberCount; i++) {
-        size_t originMemberHash = hasher(originType->getStruct()->at(i).type->getQualifier().layoutPacking +
-                                         originType->getStruct()->at(i).type->getQualifier().layoutMatrix);
-        size_t tmpMemberHash = hasher(tmpType->getStruct()->at(i).type->getQualifier().layoutPacking +
-                                      tmpType->getStruct()->at(i).type->getQualifier().layoutMatrix);
+        size_t originMemberHash = hasher((size_t)originType->getStruct()->at(i).type->getQualifier().layoutPacking +
+                                         (size_t)originType->getStruct()->at(i).type->getQualifier().layoutMatrix);
+        size_t tmpMemberHash = hasher((size_t)tmpType->getStruct()->at(i).type->getQualifier().layoutPacking +
+                                     (size_t)tmpType->getStruct()->at(i).type->getQualifier().layoutMatrix);
         originHash = hasher((originHash ^ originMemberHash) << 1);
         tmpHash = hasher((tmpHash ^ tmpMemberHash) << 1);
     }
