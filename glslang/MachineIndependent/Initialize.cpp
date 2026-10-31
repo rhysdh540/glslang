@@ -147,7 +147,7 @@ EProfile EDesktopProfile = static_cast<EProfile>(ENoProfile | ECoreProfile | ECo
                                               };
 
     const std::array Es310Desktop400Version = { Versioning{ EEsProfile,      0, 310, 0, nullptr },
-                                                Versioning{ EDesktopProfile, 0, 400, 0, nullptr },
+                                                Versioning{ EDesktopProfile, 0, 130, 0, nullptr },
                                               };
 
     const std::array Es310Desktop450Version = { Versioning{ EEsProfile,      0, 310, 0, nullptr },
@@ -1920,7 +1920,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
         //
         // Atomic counter functions.
         //
-        if ((profile != EEsProfile && version >= 300) ||
+        if ((profile != EEsProfile && version >= 130) ||
             (profile == EEsProfile && version >= 310)) {
             commonBuiltins.append(
                 "uint atomicCounterIncrement(atomic_uint);"
@@ -1929,7 +1929,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
 
                 "\n");
         }
-        if (profile != EEsProfile && version >= 300) {
+        if (profile != EEsProfile && version >= 130) {
             commonBuiltins.append(
                 "uint atomicCounterAddARB(atomic_uint, uint);"
                 "uint atomicCounterSubtractARB(atomic_uint, uint);"
@@ -1966,7 +1966,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
         // replace definitions to take 'volatile coherent nontemporal uint' instead of 'atomic_uint'
         // and map to equivalent non-counter atomic op
         //
-        if ((profile != EEsProfile && version >= 300) ||
+        if ((profile != EEsProfile && version >= 130) ||
             (profile == EEsProfile && version >= 310)) {
             commonBuiltins.append(
                 "uint atomicCounterIncrement(volatile coherent nontemporal uint);"
@@ -1975,7 +1975,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
 
                 "\n");
         }
-        if (profile != EEsProfile && version >= 300) {
+        if (profile != EEsProfile && version >= 130) {
             commonBuiltins.append(
                 "uint atomicCounterAddARB(volatile coherent nontemporal uint, uint);"
                 "uint atomicCounterSubtractARB(volatile coherent nontemporal uint, uint);"
@@ -9828,7 +9828,10 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
 
         // E_GL_ARB_shader_image_load_store
         if (profile != EEsProfile && version < 420)
-            symbolTable.setFunctionExtensions("memoryBarrier", 1, &E_GL_ARB_shader_image_load_store);
+        {
+            const char* const exts[] = { E_GL_ARB_shader_image_load_store, E_GL_ARB_shader_storage_buffer_object };
+            symbolTable.setFunctionExtensions("memoryBarrier", 2, exts);
+        }
         // All the image access functions are protected by checks on the type of the first argument.
 
         // E_GL_ARB_shader_atomic_counters
@@ -9870,7 +9873,7 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
         }
 
         // E_GL_ARB_shader_atomic_counter_ops
-        if (profile != EEsProfile && version >= 300) {
+        if (profile != EEsProfile && version >= 130) {
             symbolTable.setFunctionExtensions("atomicCounterAddARB"     , 1, &E_GL_ARB_shader_atomic_counter_ops);
             symbolTable.setFunctionExtensions("atomicCounterSubtractARB", 1, &E_GL_ARB_shader_atomic_counter_ops);
             symbolTable.setFunctionExtensions("atomicCounterMinARB"     , 1, &E_GL_ARB_shader_atomic_counter_ops);
@@ -11397,7 +11400,7 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
     symbolTable.relateToOperator("clockRealtimeEXT",     EOpReadClockDeviceKHR);
     symbolTable.relateToOperator("clockRealtime2x32EXT", EOpReadClockDeviceKHR);
 
-    if (profile != EEsProfile && version >= 300) {
+    if (profile != EEsProfile && version >= 130) {
         symbolTable.relateToOperator("atomicCounterAddARB",      EOpAtomicCounterAdd);
         symbolTable.relateToOperator("atomicCounterSubtractARB", EOpAtomicCounterSubtract);
         symbolTable.relateToOperator("atomicCounterMinARB",      EOpAtomicCounterMin);

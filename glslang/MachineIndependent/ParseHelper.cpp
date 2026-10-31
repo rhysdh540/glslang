@@ -7889,7 +7889,9 @@ void TParseContext::setLayoutQualifier(const TSourceLoc& loc, TPublicType& publi
             error(loc, "needs a literal integer", "set", "");
         return;
     } else if (id == "binding") {
-        profileRequires(loc, ~EEsProfile, 420, E_GL_ARB_shading_language_420pack, "binding");
+        const char* exts[] = { E_GL_ARB_shading_language_420pack, E_GL_ARB_shader_image_load_store,
+                               E_GL_ARB_shader_storage_buffer_object, E_GL_ARB_shader_atomic_counters };
+        profileRequires(loc, ~EEsProfile, 420, 4, exts, "binding");
         profileRequires(loc, EEsProfile, 310, nullptr, "binding");
         if (!relaxSetBindingLimits() && value >= static_cast<int>(TQualifier::layoutBindingEnd))
             error(loc, "binding is too large", id.c_str(), "");

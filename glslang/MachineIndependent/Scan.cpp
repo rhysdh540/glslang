@@ -1172,12 +1172,14 @@ int TScanContext::tokenizeIdentifier()
     case WRITEONLY:
         if (parseContext.isEsProfile() && parseContext.version >= 310)
             return keyword;
-        return es30ReservedFromGLSL(parseContext.extensionTurnedOn(E_GL_ARB_shader_image_load_store) ? 130 : 420);
+        return es30ReservedFromGLSL((parseContext.extensionTurnedOn(E_GL_ARB_shader_image_load_store) ||
+                                     parseContext.extensionTurnedOn(E_GL_ARB_shader_storage_buffer_object)) ? 130 : 420);
     case VOLATILE:
         if (parseContext.isEsProfile() && parseContext.version >= 310)
             return keyword;
         if (! parseContext.symbolTable.atBuiltInLevel() && (parseContext.isEsProfile() ||
-            (parseContext.version < 420 && ! parseContext.extensionTurnedOn(E_GL_ARB_shader_image_load_store))))
+            (parseContext.version < 420 && ! parseContext.extensionTurnedOn(E_GL_ARB_shader_image_load_store) &&
+             ! parseContext.extensionTurnedOn(E_GL_ARB_shader_storage_buffer_object))))
             reservedWord();
         return keyword;
     case NONTEMPORAL:

@@ -1108,6 +1108,8 @@ void TParseVersions::updateExtensionBehavior(int line, const char* extension, co
         updateExtensionBehavior(line, "GL_EXT_texture_cube_map_array", behaviorString);
     }
     // geometry to io_blocks
+    else if (strcmp(extension, "GL_EXT_shader_image_load_store") == 0)
+        updateExtensionBehavior(line, "GL_ARB_shader_image_load_store", behaviorString);
     else if (strcmp(extension, "GL_EXT_geometry_shader") == 0)
         updateExtensionBehavior(line, "GL_EXT_shader_io_blocks", behaviorString);
     else if (strcmp(extension, "GL_OES_geometry_shader") == 0)
