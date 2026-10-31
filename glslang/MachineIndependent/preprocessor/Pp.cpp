@@ -165,6 +165,8 @@ int TPpContext::CPPdefine(TPpToken* ppToken)
             mac.body.putToken(token, ppToken);
         } else if (pendingPoundSymbols == 1) {
             // A single #: stringify
+            if (parseContext.spvVersion.spv == 0 && !parseContext.isReadingHLSL())
+                parseContext.ppError(ppToken->loc, "not allowed in a macro", "#", "");
             parseContext.requireProfile(ppToken->loc, ~EEsProfile, "stringify (#)");
             parseContext.profileRequires(ppToken->loc, ~EEsProfile, 130, nullptr, "stringify (#)");
             bool isArg = false;
