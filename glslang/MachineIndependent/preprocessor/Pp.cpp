@@ -1260,6 +1260,10 @@ MacroExpandResult TPpContext::MacroExpand(TPpToken* ppToken, bool expandUndef, b
     if (ppToken->fullyExpanded)
         return MacroExpandNotStarted;
 
+    MacroSymbol* macro = macroAtom == 0 ? nullptr : lookupMacroDef(macroAtom);
+    if (macro != nullptr && macro->undef)
+        return MacroExpandNotStarted;
+
     switch (macroAtom) {
     case PpAtomLineMacro:
         // Arguments which are macro have been replaced in the first stage.
@@ -1288,7 +1292,6 @@ MacroExpandResult TPpContext::MacroExpand(TPpToken* ppToken, bool expandUndef, b
         break;
     }
 
-    MacroSymbol* macro = macroAtom == 0 ? nullptr : lookupMacroDef(macroAtom);
 
     // no recursive expansions
     if (macro != nullptr && macro->busy) {

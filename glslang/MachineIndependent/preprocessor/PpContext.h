@@ -341,6 +341,8 @@ public:
     MacroSymbol* lookupMacroDef(int atom)
     {
         auto existingMacroIt = macroDefs.find(atom);
+        if (existingMacroIt == macroDefs.end() && atom >= PpAtomLineMacro && atom <= PpAtomVersionMacro && parseContext.spvVersion.spv == 0)
+            existingMacroIt = macroDefs.emplace(atom, MacroSymbol{}).first;
         return (existingMacroIt == macroDefs.end()) ? nullptr : &(existingMacroIt->second);
     }
     void addMacroDef(int atom, MacroSymbol& macroDef) { macroDefs[atom] = macroDef; }
