@@ -3931,7 +3931,7 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
 
     case EOpSubgroupBroadcast:
     case EOpSubgroupQuadBroadcast:
-        if (spvVersion.spv < EShTargetSpv_1_5) {
+        if (spvVersion.spv != 0 && spvVersion.spv < EShTargetSpv_1_5) {
             // <id> must be an integral constant expression.
             if ((*argp)[1]->getAsConstantUnion() == nullptr)
                 error(loc, "argument must be compile-time constant", "id", "");
