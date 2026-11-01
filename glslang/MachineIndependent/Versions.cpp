@@ -230,6 +230,7 @@ void TParseVersions::initializeExtensionBehavior()
     extensionBehavior[E_GL_ARB_shader_storage_buffer_object] = EBhDisable;
     extensionBehavior[E_GL_ARB_shading_language_packing]     = EBhDisable;
     extensionBehavior[E_GL_ARB_texture_query_lod]            = EBhDisable;
+    extensionBehavior[E_GL_ARB_texture_query_levels]         = EBhDisable;
     extensionBehavior[E_GL_ARB_vertex_attrib_64bit]          = EBhDisable;
     extensionBehavior[E_GL_NV_gpu_shader5]                   = EBhDisable;
     extensionBehavior[E_GL_NV_bindless_texture]              = EBhDisable;
@@ -565,6 +566,7 @@ void TParseVersions::getPreamble(std::string& preamble)
             "#define GL_ARB_shader_bit_encoding 1\n"
             "#define GL_ARB_shader_storage_buffer_object 1\n"
             "#define GL_ARB_texture_query_lod 1\n"
+            "#define GL_ARB_texture_query_levels 1\n"
             "#define GL_ARB_vertex_attrib_64bit 1\n"
             "#define GL_NV_gpu_shader5 1\n"
             "#define GL_ARB_draw_instanced 1\n"
