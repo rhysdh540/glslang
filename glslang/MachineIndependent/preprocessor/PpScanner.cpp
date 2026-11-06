@@ -1012,6 +1012,8 @@ int TPpContext::tStringInput::scan(TPpToken* ppToken)
                 return PpAtomDecrement;
             } else if (ch == '=') {
                 return PPAtomSubAssign;
+            } else if (ch == '>') {
+                return PpAtomArrow;
             } else {
                 ungetch();
                 return '-';

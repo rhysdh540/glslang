@@ -261,7 +261,7 @@ extern int yylex(YYSTYPE*, TParseContext&);
 %token <lex> ATTACHMENTEXT IATTACHMENTEXT UATTACHMENTEXT
 
 %token <lex> LEFT_OP RIGHT_OP
-%token <lex> INC_OP DEC_OP LE_OP GE_OP EQ_OP NE_OP
+%token <lex> INC_OP DEC_OP LE_OP GE_OP EQ_OP NE_OP ARROW
 %token <lex> AND_OP OR_OP XOR_OP MUL_ASSIGN DIV_ASSIGN ADD_ASSIGN
 %token <lex> MOD_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 %token <lex> SUB_ASSIGN
@@ -467,6 +467,9 @@ postfix_expression
     | postfix_expression DOT IDENTIFIER {
         $$ = parseContext.handleDotDereference($3.loc, $1, *$3.string);
     }
+    | postfix_expression ARROW IDENTIFIER {
+        $$ = parseContext.handleDotDereference($3.loc, parseContext.handlePointerDeref($2.loc, $1), *$3.string);
+    }
     | postfix_expression INC_OP {
         parseContext.variableCheck($1);
         parseContext.lValueErrorCheck($2.loc, "++", $1);
@@ -643,6 +646,9 @@ unary_expression
     }
     | LEFT_PAREN type_specifier_nonarray RIGHT_PAREN unary_expression {
         $$ = parseContext.handleTypeCast($1.loc, new TType($2), $4);
+    }
+    | STAR unary_expression {
+        $$ = parseContext.handlePointerDeref($1.loc, $2);
     }
     ;
 // Grammar Note:  No traditional style type casts, except under NV extension
@@ -1257,6 +1263,7 @@ fully_specified_type
         parseContext.precisionQualifierCheck($$.loc, $$.basicType, $$.qualifier, $$.hasTypeParameter());
     }
     | type_qualifier type_specifier  {
+        parseContext.pointerQualifiers($1, $2);
         parseContext.globalQualifierFixCheck($1.loc, $1.qualifier, false, &$2);
         parseContext.globalQualifierTypeCheck($1.loc, $1.qualifier, $2);
 
@@ -1850,6 +1857,10 @@ type_specifier_nonarray
     : VOID {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtVoid;
+    }
+    | type_specifier_nonarray STAR {
+        $$ = $1;
+        parseContext.pointerTo($2.loc, $$);
     }
     | FLOAT {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
@@ -3997,6 +4008,7 @@ struct_declaration_no_inline_block
 
         $$ = $3;
 
+        parseContext.pointerQualifiers($1, $2);
         parseContext.memberQualifierCheck($1);
         parseContext.voidErrorCheck($2.loc, (*$3)[0].type->getFieldName(), $2.basicType);
         parseContext.mergeQualifiers($2.loc, $2.qualifier, $1.qualifier, true);

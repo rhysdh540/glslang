@@ -346,6 +346,10 @@ public:
     TIntermTyped* handleDotDereference(const TSourceLoc&, TIntermTyped* base, const TString& field);
     TIntermTyped* handleDotSwizzle(const TSourceLoc&, TIntermTyped* base, const TString& field);
     TIntermTyped* handleTypeCast(const TSourceLoc&, TType *castType, TIntermTyped *base);
+    void pointerTo(const TSourceLoc&, TPublicType&);
+    void pointerQualifiers(TPublicType& qualifiers, TPublicType& type);
+    TIntermTyped* handlePointerDeref(const TSourceLoc&, TIntermTyped* pointer);
+    TIntermTyped* handlePointerCall(const TSourceLoc&, TFunction*&, TIntermNode*&);
     void blockMemberExtensionCheck(const TSourceLoc&, const TIntermTyped* base, int member, const TString& memberName);
     TFunction* handleFunctionDeclarator(const TSourceLoc&, TFunction& function, bool prototype);
     TIntermAggregate* handleFunctionDefinition(const TSourceLoc&, TFunction&);

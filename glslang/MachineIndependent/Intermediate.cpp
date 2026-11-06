@@ -175,6 +175,15 @@ TIntermTyped* TIntermediate::addBinaryMath(TOperator op, TIntermTyped* left, TIn
         return node;
     }
 
+    bool pointers = left->getType().isNvPointer() || right->getType().isNvPointer();
+    if (pointers && (op == EOpEqual || op == EOpNotEqual) && left->isReference() && right->isReference()) {
+        bool voided = left->getType().isNvVoidPointer() || right->getType().isNvVoidPointer();
+        if (!voided && !left->getType().sameReferenceType(right->getType()))
+            return nullptr;
+        left = addBuiltInFunctionCall(loc, EOpConvPtrToUint64, true, left, TType(EbtUint64));
+        right = addBuiltInFunctionCall(loc, EOpConvPtrToUint64, true, right, TType(EbtUint64));
+    }
+
     // No other math operators supported on references
     if (left->isReference() || right->isReference())
         return nullptr;

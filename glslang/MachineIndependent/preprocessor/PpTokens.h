@@ -116,6 +116,7 @@ enum EFixedAtoms {
 
     PpAtomDecrement,
     PpAtomIncrement,
+    PpAtomArrow,
 
     PpAtomColonColon,
 

@@ -495,6 +495,8 @@ const std::unordered_map<const char*, int, str_hash, str_eq> KeywordMap {
     {"dvec4",DVEC4},
     {"int64_t",INT64_T},
     {"uint64_t",UINT64_T},
+    {"intptr_t",INT64_T},
+    {"uintptr_t",UINT64_T},
     {"i64vec2",I64VEC2},
     {"i64vec3",I64VEC3},
     {"i64vec4",I64VEC4},
@@ -941,6 +943,7 @@ int TScanContext::tokenize(TPpContext* pp, TParserToken& token)
 
         case PpAtomDecrement:          return DEC_OP;
         case PpAtomIncrement:          return INC_OP;
+        case PpAtomArrow:              return ARROW;
 
         case PpAtomColonColon:
             parseContext.error(loc, "not supported", "::", "");
@@ -1402,6 +1405,7 @@ int TScanContext::tokenizeIdentifier()
             parseContext.extensionTurnedOn(E_GL_ARB_gpu_shader_int64) ||
             parseContext.extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types) ||
             parseContext.extensionTurnedOn(E_GL_NV_gpu_shader5) ||
+            parseContext.extensionTurnedOn(E_GL_NV_shader_buffer_load) ||
             parseContext.extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_int64)) {
             afterType = true;
             return keyword;

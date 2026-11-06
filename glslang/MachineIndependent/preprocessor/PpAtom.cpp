@@ -121,6 +121,7 @@ const struct {
 
     { PpAtomDecrement,      "--" },
     { PpAtomIncrement,      "++" },
+    { PpAtomArrow,          "->" },
 
     { PpAtomColonColon,     "::" },
 

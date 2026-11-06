@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_MACHINEINDEPENDENT_GLSLANG_TAB_CPP_H_INCLUDED
-# define YY_YY_MACHINEINDEPENDENT_GLSLANG_TAB_CPP_H_INCLUDED
+#ifndef YY_YY_GLSLANG_TAB_CPP_H_INCLUDED
+# define YY_YY_GLSLANG_TAB_CPP_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 1
@@ -431,141 +431,142 @@ extern int yydebug;
     GE_OP = 632,                   /* GE_OP  */
     EQ_OP = 633,                   /* EQ_OP  */
     NE_OP = 634,                   /* NE_OP  */
-    AND_OP = 635,                  /* AND_OP  */
-    OR_OP = 636,                   /* OR_OP  */
-    XOR_OP = 637,                  /* XOR_OP  */
-    MUL_ASSIGN = 638,              /* MUL_ASSIGN  */
-    DIV_ASSIGN = 639,              /* DIV_ASSIGN  */
-    ADD_ASSIGN = 640,              /* ADD_ASSIGN  */
-    MOD_ASSIGN = 641,              /* MOD_ASSIGN  */
-    LEFT_ASSIGN = 642,             /* LEFT_ASSIGN  */
-    RIGHT_ASSIGN = 643,            /* RIGHT_ASSIGN  */
-    AND_ASSIGN = 644,              /* AND_ASSIGN  */
-    XOR_ASSIGN = 645,              /* XOR_ASSIGN  */
-    OR_ASSIGN = 646,               /* OR_ASSIGN  */
-    SUB_ASSIGN = 647,              /* SUB_ASSIGN  */
-    STRING_LITERAL = 648,          /* STRING_LITERAL  */
-    LEFT_PAREN = 649,              /* LEFT_PAREN  */
-    RIGHT_PAREN = 650,             /* RIGHT_PAREN  */
-    LEFT_BRACKET = 651,            /* LEFT_BRACKET  */
-    RIGHT_BRACKET = 652,           /* RIGHT_BRACKET  */
-    LEFT_BRACE = 653,              /* LEFT_BRACE  */
-    RIGHT_BRACE = 654,             /* RIGHT_BRACE  */
-    DOT = 655,                     /* DOT  */
-    COMMA = 656,                   /* COMMA  */
-    COLON = 657,                   /* COLON  */
-    EQUAL = 658,                   /* EQUAL  */
-    SEMICOLON = 659,               /* SEMICOLON  */
-    BANG = 660,                    /* BANG  */
-    DASH = 661,                    /* DASH  */
-    TILDE = 662,                   /* TILDE  */
-    PLUS = 663,                    /* PLUS  */
-    STAR = 664,                    /* STAR  */
-    SLASH = 665,                   /* SLASH  */
-    PERCENT = 666,                 /* PERCENT  */
-    LEFT_ANGLE = 667,              /* LEFT_ANGLE  */
-    RIGHT_ANGLE = 668,             /* RIGHT_ANGLE  */
-    VERTICAL_BAR = 669,            /* VERTICAL_BAR  */
-    CARET = 670,                   /* CARET  */
-    AMPERSAND = 671,               /* AMPERSAND  */
-    QUESTION = 672,                /* QUESTION  */
-    INVARIANT = 673,               /* INVARIANT  */
-    HIGH_PRECISION = 674,          /* HIGH_PRECISION  */
-    MEDIUM_PRECISION = 675,        /* MEDIUM_PRECISION  */
-    LOW_PRECISION = 676,           /* LOW_PRECISION  */
-    PRECISION = 677,               /* PRECISION  */
-    PACKED = 678,                  /* PACKED  */
-    RESOURCE = 679,                /* RESOURCE  */
-    SUPERP = 680,                  /* SUPERP  */
-    INLINE = 681,                  /* INLINE  */
-    NOINLINE = 682,                /* NOINLINE  */
-    FLOATCONSTANT = 683,           /* FLOATCONSTANT  */
-    INTCONSTANT = 684,             /* INTCONSTANT  */
-    UINTCONSTANT = 685,            /* UINTCONSTANT  */
-    BOOLCONSTANT = 686,            /* BOOLCONSTANT  */
-    IDENTIFIER = 687,              /* IDENTIFIER  */
-    TYPE_NAME = 688,               /* TYPE_NAME  */
-    CENTROID = 689,                /* CENTROID  */
-    IN = 690,                      /* IN  */
-    OUT = 691,                     /* OUT  */
-    INOUT = 692,                   /* INOUT  */
-    STRUCT = 693,                  /* STRUCT  */
-    VOID = 694,                    /* VOID  */
-    WHILE = 695,                   /* WHILE  */
-    BREAK = 696,                   /* BREAK  */
-    CONTINUE = 697,                /* CONTINUE  */
-    DO = 698,                      /* DO  */
-    ELSE = 699,                    /* ELSE  */
-    FOR = 700,                     /* FOR  */
-    IF = 701,                      /* IF  */
-    DISCARD = 702,                 /* DISCARD  */
-    RETURN = 703,                  /* RETURN  */
-    SWITCH = 704,                  /* SWITCH  */
-    CASE = 705,                    /* CASE  */
-    DEFAULT = 706,                 /* DEFAULT  */
-    TERMINATE_INVOCATION = 707,    /* TERMINATE_INVOCATION  */
-    TERMINATE_RAY = 708,           /* TERMINATE_RAY  */
-    IGNORE_INTERSECTION = 709,     /* IGNORE_INTERSECTION  */
-    UNIFORM = 710,                 /* UNIFORM  */
-    SHARED = 711,                  /* SHARED  */
-    BUFFER = 712,                  /* BUFFER  */
-    TILEIMAGEEXT = 713,            /* TILEIMAGEEXT  */
-    FLAT = 714,                    /* FLAT  */
-    SMOOTH = 715,                  /* SMOOTH  */
-    LAYOUT = 716,                  /* LAYOUT  */
-    DOUBLECONSTANT = 717,          /* DOUBLECONSTANT  */
-    INT16CONSTANT = 718,           /* INT16CONSTANT  */
-    UINT16CONSTANT = 719,          /* UINT16CONSTANT  */
-    FLOAT16CONSTANT = 720,         /* FLOAT16CONSTANT  */
-    INT32CONSTANT = 721,           /* INT32CONSTANT  */
-    UINT32CONSTANT = 722,          /* UINT32CONSTANT  */
-    FLOATE2M1CONSTANT = 723,       /* FLOATE2M1CONSTANT  */
-    FLOATE3M2CONSTANT = 724,       /* FLOATE3M2CONSTANT  */
-    FLOATE2M3CONSTANT = 725,       /* FLOATE2M3CONSTANT  */
-    FLOATUE8M0CONSTANT = 726,      /* FLOATUE8M0CONSTANT  */
-    FLOATMXINT8CONSTANT = 727,     /* FLOATMXINT8CONSTANT  */
-    INT64CONSTANT = 728,           /* INT64CONSTANT  */
-    UINT64CONSTANT = 729,          /* UINT64CONSTANT  */
-    SUBROUTINE = 730,              /* SUBROUTINE  */
-    DEMOTE = 731,                  /* DEMOTE  */
-    FUNCTION = 732,                /* FUNCTION  */
-    PAYLOADNV = 733,               /* PAYLOADNV  */
-    PAYLOADINNV = 734,             /* PAYLOADINNV  */
-    HITATTRNV = 735,               /* HITATTRNV  */
-    CALLDATANV = 736,              /* CALLDATANV  */
-    CALLDATAINNV = 737,            /* CALLDATAINNV  */
-    PAYLOADEXT = 738,              /* PAYLOADEXT  */
-    PAYLOADINEXT = 739,            /* PAYLOADINEXT  */
-    HITATTREXT = 740,              /* HITATTREXT  */
-    CALLDATAEXT = 741,             /* CALLDATAEXT  */
-    CALLDATAINEXT = 742,           /* CALLDATAINEXT  */
-    PATCH = 743,                   /* PATCH  */
-    SAMPLE = 744,                  /* SAMPLE  */
-    NONUNIFORM = 745,              /* NONUNIFORM  */
-    RESOURCEHEAP = 746,            /* RESOURCEHEAP  */
-    SAMPLERHEAP = 747,             /* SAMPLERHEAP  */
-    COHERENT = 748,                /* COHERENT  */
-    VOLATILE = 749,                /* VOLATILE  */
-    RESTRICT = 750,                /* RESTRICT  */
-    READONLY = 751,                /* READONLY  */
-    WRITEONLY = 752,               /* WRITEONLY  */
-    NONTEMPORAL = 753,             /* NONTEMPORAL  */
-    DEVICECOHERENT = 754,          /* DEVICECOHERENT  */
-    QUEUEFAMILYCOHERENT = 755,     /* QUEUEFAMILYCOHERENT  */
-    WORKGROUPCOHERENT = 756,       /* WORKGROUPCOHERENT  */
-    SUBGROUPCOHERENT = 757,        /* SUBGROUPCOHERENT  */
-    NONPRIVATE = 758,              /* NONPRIVATE  */
-    SHADERCALLCOHERENT = 759,      /* SHADERCALLCOHERENT  */
-    NOPERSPECTIVE = 760,           /* NOPERSPECTIVE  */
-    EXPLICITINTERPAMD = 761,       /* EXPLICITINTERPAMD  */
-    PERVERTEXEXT = 762,            /* PERVERTEXEXT  */
-    PERVERTEXNV = 763,             /* PERVERTEXNV  */
-    PERPRIMITIVENV = 764,          /* PERPRIMITIVENV  */
-    PERVIEWNV = 765,               /* PERVIEWNV  */
-    PERTASKNV = 766,               /* PERTASKNV  */
-    PERPRIMITIVEEXT = 767,         /* PERPRIMITIVEEXT  */
-    TASKPAYLOADWORKGROUPEXT = 768, /* TASKPAYLOADWORKGROUPEXT  */
-    PRECISE = 769                  /* PRECISE  */
+    ARROW = 635,                   /* ARROW  */
+    AND_OP = 636,                  /* AND_OP  */
+    OR_OP = 637,                   /* OR_OP  */
+    XOR_OP = 638,                  /* XOR_OP  */
+    MUL_ASSIGN = 639,              /* MUL_ASSIGN  */
+    DIV_ASSIGN = 640,              /* DIV_ASSIGN  */
+    ADD_ASSIGN = 641,              /* ADD_ASSIGN  */
+    MOD_ASSIGN = 642,              /* MOD_ASSIGN  */
+    LEFT_ASSIGN = 643,             /* LEFT_ASSIGN  */
+    RIGHT_ASSIGN = 644,            /* RIGHT_ASSIGN  */
+    AND_ASSIGN = 645,              /* AND_ASSIGN  */
+    XOR_ASSIGN = 646,              /* XOR_ASSIGN  */
+    OR_ASSIGN = 647,               /* OR_ASSIGN  */
+    SUB_ASSIGN = 648,              /* SUB_ASSIGN  */
+    STRING_LITERAL = 649,          /* STRING_LITERAL  */
+    LEFT_PAREN = 650,              /* LEFT_PAREN  */
+    RIGHT_PAREN = 651,             /* RIGHT_PAREN  */
+    LEFT_BRACKET = 652,            /* LEFT_BRACKET  */
+    RIGHT_BRACKET = 653,           /* RIGHT_BRACKET  */
+    LEFT_BRACE = 654,              /* LEFT_BRACE  */
+    RIGHT_BRACE = 655,             /* RIGHT_BRACE  */
+    DOT = 656,                     /* DOT  */
+    COMMA = 657,                   /* COMMA  */
+    COLON = 658,                   /* COLON  */
+    EQUAL = 659,                   /* EQUAL  */
+    SEMICOLON = 660,               /* SEMICOLON  */
+    BANG = 661,                    /* BANG  */
+    DASH = 662,                    /* DASH  */
+    TILDE = 663,                   /* TILDE  */
+    PLUS = 664,                    /* PLUS  */
+    STAR = 665,                    /* STAR  */
+    SLASH = 666,                   /* SLASH  */
+    PERCENT = 667,                 /* PERCENT  */
+    LEFT_ANGLE = 668,              /* LEFT_ANGLE  */
+    RIGHT_ANGLE = 669,             /* RIGHT_ANGLE  */
+    VERTICAL_BAR = 670,            /* VERTICAL_BAR  */
+    CARET = 671,                   /* CARET  */
+    AMPERSAND = 672,               /* AMPERSAND  */
+    QUESTION = 673,                /* QUESTION  */
+    INVARIANT = 674,               /* INVARIANT  */
+    HIGH_PRECISION = 675,          /* HIGH_PRECISION  */
+    MEDIUM_PRECISION = 676,        /* MEDIUM_PRECISION  */
+    LOW_PRECISION = 677,           /* LOW_PRECISION  */
+    PRECISION = 678,               /* PRECISION  */
+    PACKED = 679,                  /* PACKED  */
+    RESOURCE = 680,                /* RESOURCE  */
+    SUPERP = 681,                  /* SUPERP  */
+    INLINE = 682,                  /* INLINE  */
+    NOINLINE = 683,                /* NOINLINE  */
+    FLOATCONSTANT = 684,           /* FLOATCONSTANT  */
+    INTCONSTANT = 685,             /* INTCONSTANT  */
+    UINTCONSTANT = 686,            /* UINTCONSTANT  */
+    BOOLCONSTANT = 687,            /* BOOLCONSTANT  */
+    IDENTIFIER = 688,              /* IDENTIFIER  */
+    TYPE_NAME = 689,               /* TYPE_NAME  */
+    CENTROID = 690,                /* CENTROID  */
+    IN = 691,                      /* IN  */
+    OUT = 692,                     /* OUT  */
+    INOUT = 693,                   /* INOUT  */
+    STRUCT = 694,                  /* STRUCT  */
+    VOID = 695,                    /* VOID  */
+    WHILE = 696,                   /* WHILE  */
+    BREAK = 697,                   /* BREAK  */
+    CONTINUE = 698,                /* CONTINUE  */
+    DO = 699,                      /* DO  */
+    ELSE = 700,                    /* ELSE  */
+    FOR = 701,                     /* FOR  */
+    IF = 702,                      /* IF  */
+    DISCARD = 703,                 /* DISCARD  */
+    RETURN = 704,                  /* RETURN  */
+    SWITCH = 705,                  /* SWITCH  */
+    CASE = 706,                    /* CASE  */
+    DEFAULT = 707,                 /* DEFAULT  */
+    TERMINATE_INVOCATION = 708,    /* TERMINATE_INVOCATION  */
+    TERMINATE_RAY = 709,           /* TERMINATE_RAY  */
+    IGNORE_INTERSECTION = 710,     /* IGNORE_INTERSECTION  */
+    UNIFORM = 711,                 /* UNIFORM  */
+    SHARED = 712,                  /* SHARED  */
+    BUFFER = 713,                  /* BUFFER  */
+    TILEIMAGEEXT = 714,            /* TILEIMAGEEXT  */
+    FLAT = 715,                    /* FLAT  */
+    SMOOTH = 716,                  /* SMOOTH  */
+    LAYOUT = 717,                  /* LAYOUT  */
+    DOUBLECONSTANT = 718,          /* DOUBLECONSTANT  */
+    INT16CONSTANT = 719,           /* INT16CONSTANT  */
+    UINT16CONSTANT = 720,          /* UINT16CONSTANT  */
+    FLOAT16CONSTANT = 721,         /* FLOAT16CONSTANT  */
+    INT32CONSTANT = 722,           /* INT32CONSTANT  */
+    UINT32CONSTANT = 723,          /* UINT32CONSTANT  */
+    FLOATE2M1CONSTANT = 724,       /* FLOATE2M1CONSTANT  */
+    FLOATE3M2CONSTANT = 725,       /* FLOATE3M2CONSTANT  */
+    FLOATE2M3CONSTANT = 726,       /* FLOATE2M3CONSTANT  */
+    FLOATUE8M0CONSTANT = 727,      /* FLOATUE8M0CONSTANT  */
+    FLOATMXINT8CONSTANT = 728,     /* FLOATMXINT8CONSTANT  */
+    INT64CONSTANT = 729,           /* INT64CONSTANT  */
+    UINT64CONSTANT = 730,          /* UINT64CONSTANT  */
+    SUBROUTINE = 731,              /* SUBROUTINE  */
+    DEMOTE = 732,                  /* DEMOTE  */
+    FUNCTION = 733,                /* FUNCTION  */
+    PAYLOADNV = 734,               /* PAYLOADNV  */
+    PAYLOADINNV = 735,             /* PAYLOADINNV  */
+    HITATTRNV = 736,               /* HITATTRNV  */
+    CALLDATANV = 737,              /* CALLDATANV  */
+    CALLDATAINNV = 738,            /* CALLDATAINNV  */
+    PAYLOADEXT = 739,              /* PAYLOADEXT  */
+    PAYLOADINEXT = 740,            /* PAYLOADINEXT  */
+    HITATTREXT = 741,              /* HITATTREXT  */
+    CALLDATAEXT = 742,             /* CALLDATAEXT  */
+    CALLDATAINEXT = 743,           /* CALLDATAINEXT  */
+    PATCH = 744,                   /* PATCH  */
+    SAMPLE = 745,                  /* SAMPLE  */
+    NONUNIFORM = 746,              /* NONUNIFORM  */
+    RESOURCEHEAP = 747,            /* RESOURCEHEAP  */
+    SAMPLERHEAP = 748,             /* SAMPLERHEAP  */
+    COHERENT = 749,                /* COHERENT  */
+    VOLATILE = 750,                /* VOLATILE  */
+    RESTRICT = 751,                /* RESTRICT  */
+    READONLY = 752,                /* READONLY  */
+    WRITEONLY = 753,               /* WRITEONLY  */
+    NONTEMPORAL = 754,             /* NONTEMPORAL  */
+    DEVICECOHERENT = 755,          /* DEVICECOHERENT  */
+    QUEUEFAMILYCOHERENT = 756,     /* QUEUEFAMILYCOHERENT  */
+    WORKGROUPCOHERENT = 757,       /* WORKGROUPCOHERENT  */
+    SUBGROUPCOHERENT = 758,        /* SUBGROUPCOHERENT  */
+    NONPRIVATE = 759,              /* NONPRIVATE  */
+    SHADERCALLCOHERENT = 760,      /* SHADERCALLCOHERENT  */
+    NOPERSPECTIVE = 761,           /* NOPERSPECTIVE  */
+    EXPLICITINTERPAMD = 762,       /* EXPLICITINTERPAMD  */
+    PERVERTEXEXT = 763,            /* PERVERTEXEXT  */
+    PERVERTEXNV = 764,             /* PERVERTEXNV  */
+    PERPRIMITIVENV = 765,          /* PERPRIMITIVENV  */
+    PERVIEWNV = 766,               /* PERVIEWNV  */
+    PERTASKNV = 767,               /* PERTASKNV  */
+    PERPRIMITIVEEXT = 768,         /* PERPRIMITIVEEXT  */
+    TASKPAYLOADWORKGROUPEXT = 769, /* TASKPAYLOADWORKGROUPEXT  */
+    PRECISE = 770                  /* PRECISE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -574,7 +575,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 72 "MachineIndependent/glslang.y"
+#line 72 "glslang.y"
 
     struct {
         glslang::TSourceLoc loc;
@@ -613,7 +614,7 @@ union YYSTYPE
         glslang::TTypeParameters* typeParameters;
     } interm;
 
-#line 617 "MachineIndependent/glslang_tab.cpp.h"
+#line 618 "glslang_tab.cpp.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -627,4 +628,4 @@ typedef union YYSTYPE YYSTYPE;
 int yyparse (glslang::TParseContext* pParseContext);
 
 
-#endif /* !YY_YY_MACHINEINDEPENDENT_GLSLANG_TAB_CPP_H_INCLUDED  */
+#endif /* !YY_YY_GLSLANG_TAB_CPP_H_INCLUDED  */

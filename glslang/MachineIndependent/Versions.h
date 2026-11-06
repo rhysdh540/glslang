@@ -307,7 +307,10 @@ const char* const E_GL_NV_cluster_acceleration_structure        = "GL_NV_cluster
 const char* const E_GL_NV_linear_swept_spheres                  = "GL_NV_linear_swept_spheres";
 const char* const E_GL_NV_desktop_lowp_mediump                  = "GL_NV_desktop_lowp_mediump";
 const char* const E_GL_NV_gpu_shader5                           = "GL_NV_gpu_shader5";
+const char* const E_GL_NV_shader_buffer_load                    = "GL_NV_shader_buffer_load";
+const char* const E_GL_NV_shader_buffer_store                   = "GL_NV_shader_buffer_store";
 const char* const E_GL_NV_bindless_texture                      = "GL_NV_bindless_texture";
+const char* const NV_pointers[] = { E_GL_NV_shader_buffer_load, E_GL_NV_gpu_shader5 };
 const char* const E_GL_NV_push_constant_bank                    = "GL_NV_push_constant_bank";
 const char* const E_GL_NV_explicit_typecast                     = "GL_NV_explicit_typecast";
 

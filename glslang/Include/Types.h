@@ -2035,6 +2035,8 @@ public:
     bool hasTypeParameter() const { return isCoopMat() || isCoopVecNV() || isLongVector() || isTensorARM(); }
     int getTensorRankARM() const { return static_cast<int>(tensorRankARM); }
     bool isReference() const { return getBasicType() == EbtReference; }
+    bool isNvPointer() const { return isReference() && getReferentType()->getTypeName().compare(0, 12, "gl_NvPointer") == 0; }
+    bool isNvVoidPointer() const { return isNvPointer() && getReferentType()->getTypeName() == "gl_NvPointer_void"; }
     bool isSpirvType() const { return getBasicType() == EbtSpirvType; }
     int getCoopMatKHRuse() const { return static_cast<int>(coopmatKHRuse); }
 

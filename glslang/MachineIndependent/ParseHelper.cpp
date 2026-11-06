@@ -621,6 +621,19 @@ TIntermTyped* TParseContext::handleBracketDereference(const TSourceLoc& loc, TIn
     // at least one of base and index is not a front-end constant variable...
     TIntermTyped* result = nullptr;
 
+    if (base->getType().isNvPointer() && ! base->isArray()) {
+        if (base->getType().isNvVoidPointer()) {
+            error(loc, "index of a pointer to void", "[", "");
+            return base;
+        }
+        TIntermTyped* moved = intermediate.addBinaryMath(EOpAdd, base, index, loc);
+        if (moved == nullptr) {
+            error(loc, "cannot index the pointer", "[", "");
+            return base;
+        }
+        moved->setType(base->getType());
+        return handlePointerDeref(loc, moved);
+    }
     if (base->isReference() && ! base->isArray()) {
         requireExtensions(loc, 1, &E_GL_EXT_buffer_reference2, "buffer reference indexing");
         if (base->getType().getReferentType()->containsUnsizedArray()) {
@@ -963,7 +976,8 @@ TIntermTyped* TParseContext::handleBinaryMath(const TSourceLoc& loc, const char*
 
     TIntermTyped* result = nullptr;
     if (allowed) {
-        if ((left->isReference() || right->isReference()))
+        if ((left->isReference() || right->isReference()) &&
+            !(left->getType().isNvPointer() || right->getType().isNvPointer()))
             requireExtensions(loc, 1, &E_GL_EXT_buffer_reference2, "buffer reference math");
         result = intermediate.addBinaryMath(op, left, right, loc);
     }
@@ -980,6 +994,23 @@ TIntermTyped* TParseContext::handleBinaryMath(const TSourceLoc& loc, const char*
 TIntermTyped* TParseContext::handleUnaryMath(const TSourceLoc& loc, const char* str, TOperator op, TIntermTyped* childNode)
 {
     rValueErrorCheck(loc, str, childNode);
+
+    bool step = op == EOpPreIncrement || op == EOpPostIncrement || op == EOpPreDecrement || op == EOpPostDecrement;
+    if (step && childNode->getType().isNvPointer() && !childNode->getType().isNvVoidPointer()) {
+        bool up = op == EOpPreIncrement || op == EOpPostIncrement;
+        TIntermTyped* one = intermediate.addConstantUnion(1, loc);
+        TIntermTyped* moved = intermediate.addAssign(up ? EOpAddAssign : EOpSubAssign, childNode, one, loc);
+        if (moved == nullptr) {
+            error(loc, "cannot step the pointer", str, "");
+            return childNode;
+        }
+        if (op == EOpPreIncrement || op == EOpPreDecrement)
+            return moved;
+        TIntermTyped* back = intermediate.addBinaryMath(up ? EOpSub : EOpAdd, moved, intermediate.addConstantUnion(1, loc), loc);
+        if (back != nullptr)
+            back->setType(childNode->getType());
+        return back != nullptr ? back : moved;
+    }
 
     bool allowed = true;
     if ((childNode->getType().contains16BitFloat() && !float16Arithmetic()) ||
@@ -1176,9 +1207,149 @@ TIntermTyped* TParseContext::handleDotSwizzle(const TSourceLoc& loc, TIntermType
     return result;
 }
 
+void TParseContext::pointerTo(const TSourceLoc& loc, TPublicType& pub)
+{
+    requireExtensions(loc, 2, NV_pointers, "pointer");
+    if (pub.arraySizes)
+        error(loc, "pointer to an array type", "*", "");
+    TType pointee(pub);
+    bool isVoid = pointee.getBasicType() == EbtVoid;
+    TString name = "gl_NvPointer_";
+    if (isVoid) {
+        pointee.shallowCopy(TType(EbtUint));
+        name += "void";
+    } else
+        pointee.appendMangledName(name);
+    pointee.getQualifier().clear();
+    pointee.getQualifier().storage = EvqBuffer;
+    pointee.setFieldName("gl_NvPointee");
+    TTypeList* members = new TTypeList;
+    members->push_back(TTypeLoc{new TType, loc});
+    members->back().type->shallowCopy(pointee);
+    TQualifier qualifier;
+    qualifier.clear();
+    qualifier.storage = EvqBuffer;
+    qualifier.layoutPacking = ElpStd430;
+    qualifier.layoutBufferReference = true;
+    int size, stride;
+    int align = TIntermediate::getBaseAlignment(pointee, size, stride, ElpStd430, false);
+    unsigned int bits = 0;
+    while ((1 << bits) < align)
+        ++bits;
+    qualifier.layoutBufferReferenceAlign = bits;
+    fixBlockUniformOffsets(qualifier, *members);
+    TType block(members, name, qualifier);
+    TType* reference = new TType(EbtReference, block, name);
+    TSourceLoc at = pub.loc;
+    TQualifier kept = pub.qualifier;
+    pub.init(at, false);
+    pub.qualifier = kept;
+    pub.basicType = EbtReference;
+    pub.userDef = reference;
+}
+
+void TParseContext::pointerQualifiers(TPublicType& qualifiers, TPublicType& type)
+{
+    if (type.basicType != EbtReference || type.userDef == nullptr || !type.userDef->isNvPointer())
+        return;
+    TQualifier& q = qualifiers.qualifier;
+    if (!q.isMemory())
+        return;
+    TType* reference = new TType;
+    reference->deepCopy(*type.userDef);
+    TQualifier& pointee = reference->getReferentType()->getQualifier();
+    pointee.coherent |= q.coherent;
+    pointee.devicecoherent |= q.devicecoherent;
+    pointee.queuefamilycoherent |= q.queuefamilycoherent;
+    pointee.workgroupcoherent |= q.workgroupcoherent;
+    pointee.subgroupcoherent |= q.subgroupcoherent;
+    pointee.shadercallcoherent |= q.shadercallcoherent;
+    pointee.nonprivate |= q.nonprivate;
+    pointee.volatil |= q.volatil;
+    pointee.nontemporal |= q.nontemporal;
+    pointee.restrict |= q.restrict;
+    pointee.readonly |= q.readonly;
+    pointee.writeonly |= q.writeonly;
+    q.coherent = q.devicecoherent = q.queuefamilycoherent = q.workgroupcoherent = false;
+    q.subgroupcoherent = q.shadercallcoherent = q.nonprivate = q.volatil = q.nontemporal = false;
+    q.restrict = q.readonly = q.writeonly = false;
+    type.userDef = reference;
+}
+
+TIntermTyped* TParseContext::handlePointerDeref(const TSourceLoc& loc, TIntermTyped* pointer)
+{
+    if (!pointer->getType().isNvPointer() || pointer->isArray()) {
+        error(loc, "dereference of what is not a pointer", "*", "");
+        return pointer;
+    }
+    if (pointer->getType().isNvVoidPointer()) {
+        error(loc, "dereference of a pointer to void", "*", "");
+        return pointer;
+    }
+    return handleDotDereference(loc, pointer, "gl_NvPointee");
+}
+
+TIntermTyped* TParseContext::handlePointerCall(const TSourceLoc& loc, TFunction*& function, TIntermNode*& arguments)
+{
+    const TString& name = function->getName();
+    int count = function->getParamCount();
+    TIntermTyped* first = arguments == nullptr ? nullptr :
+        (arguments->getAsAggregate() && count > 1 ? arguments->getAsAggregate()->getSequence()[0]->getAsTyped()
+                                                  : arguments->getAsTyped());
+    if (first == nullptr || !(extensionTurnedOn(E_GL_NV_shader_buffer_load) || extensionTurnedOn(E_GL_NV_gpu_shader5)))
+        return nullptr;
+    if (name == "packPtr" && count == 1) {
+        TIntermTyped* packed = intermediate.addBuiltInFunctionCall(loc, EOpPackUint2x32, true, first, TType(EbtUint64));
+        if (packed == nullptr)
+            return nullptr;
+        TPublicType pub;
+        pub.init(loc);
+        pub.basicType = EbtVoid;
+        pointerTo(loc, pub);
+        return intermediate.addBuiltInFunctionCall(loc, EOpConvUint64ToPtr, true, packed, TType(pub));
+    }
+    if (name == "unpackPtr" && count == 1 && first->getType().isNvPointer()) {
+        TIntermTyped* address = intermediate.addBuiltInFunctionCall(loc, EOpConvPtrToUint64, true, first, TType(EbtUint64));
+        return intermediate.addBuiltInFunctionCall(loc, EOpUnpackUint2x32, true, address, TType(EbtUint, EvqTemporary, 2));
+    }
+    if (name.compare(0, 6, "atomic") == 0 && first->getType().isNvPointer() && !first->isArray()) {
+        TIntermTyped* memory = handlePointerDeref(loc, first);
+        TFunction* called = new TFunction(&name, function->getType(), function->getBuiltInOp());
+        for (int i = 0; i < count; ++i) {
+            TParameter param = { nullptr, new TType, nullptr };
+            param.type->shallowCopy(i == 0 ? memory->getType() : *(*function)[i].type);
+            called->addParameter(param);
+        }
+        function = called;
+        if (count > 1)
+            arguments->getAsAggregate()->getSequence()[0] = memory;
+        else
+            arguments = memory;
+    }
+    return nullptr;
+}
+
 TIntermTyped* TParseContext::handleTypeCast(const TSourceLoc& loc, TType *castType, TIntermTyped *base)
 {
     TIntermTyped *result = base;
+    if (castType->isNvPointer() || base->getType().isNvPointer()) {
+        requireExtensions(loc, 2, NV_pointers, "pointer typecast");
+        TIntermTyped* address = base;
+        if (base->getType().isNvPointer())
+            address = intermediate.addBuiltInFunctionCall(loc, EOpConvPtrToUint64, true, base, TType(EbtUint64));
+        else if (base->isScalar() && (base->getBasicType() == EbtInt64 || base->getBasicType() == EbtUint64))
+            address = intermediate.addConversion(EbtUint64, base);
+        else {
+            error(loc, "a pointer is cast only from a pointer or a 64-bit integer", "typecast", "");
+            return base;
+        }
+        if (castType->isNvPointer())
+            return intermediate.addBuiltInFunctionCall(loc, EOpConvUint64ToPtr, true, address, *castType);
+        if (castType->isScalar() && (castType->getBasicType() == EbtInt64 || castType->getBasicType() == EbtUint64))
+            return intermediate.addConversion(castType->getBasicType(), address);
+        error(loc, "a pointer is cast only to a pointer or a 64-bit integer", "typecast", "");
+        return base;
+    }
     requireExtensions(loc, 1, &E_GL_NV_explicit_typecast, "explicit typecast");
     if (castType->isScalar() || castType->isVector() || castType->isMatrix() || castType->isReference()) {
         if (base->getAsAggregate() && !base->getAsAggregate()->getSequence().empty() ) {
@@ -1433,6 +1604,9 @@ TIntermTyped* TParseContext::handleFunctionCall(const TSourceLoc& loc, TFunction
 {
     TIntermTyped* result = nullptr;
 
+    if (TIntermTyped* made = handlePointerCall(loc, function, arguments))
+        return made;
+
     if (spvVersion.vulkan != 0 && spvVersion.vulkanRelaxed) {
         // allow calls that are invalid in Vulkan Semantics to be invisibily
         // remapped to equivalent valid functions
@@ -1450,7 +1624,9 @@ TIntermTyped* TParseContext::handleFunctionCall(const TSourceLoc& loc, TFunction
         // Their parameters will be verified algorithmically.
         //
         TType type(EbtVoid);  // use this to get the type back
-        if (! constructorError(loc, arguments, *function, function->getBuiltInOp(), type)) {
+        if (function->getType().isNvPointer())
+            error(loc, "no constructor makes a pointer", "constructor", "");
+        else if (! constructorError(loc, arguments, *function, function->getBuiltInOp(), type)) {
             //
             // It's a constructor, of type 'type'.
             //
@@ -2895,7 +3071,7 @@ TIntermTyped* TParseContext::addOutputArgumentConversions(const TFunction& funct
 
 TIntermTyped* TParseContext::addAssign(const TSourceLoc& loc, TOperator op, TIntermTyped* left, TIntermTyped* right)
 {
-    if ((op == EOpAddAssign || op == EOpSubAssign) && left->isReference())
+    if ((op == EOpAddAssign || op == EOpSubAssign) && left->isReference() && !left->getType().isNvPointer())
         requireExtensions(loc, 1, &E_GL_EXT_buffer_reference2, "+= and -= on a buffer reference");
 
     if (op == EOpAssign && left->getBasicType() == EbtSampler && right->getBasicType() == EbtSampler)
@@ -7006,6 +7182,8 @@ void TParseContext::opaqueCheck(const TSourceLoc& loc, const TType& type, const 
 
 void TParseContext::referenceCheck(const TSourceLoc& loc, const TType& type, const char* op)
 {
+    if (type.isNvPointer())
+        return;
     if (containsFieldWithBasicType(type, EbtReference))
         error(loc, "can't use with reference types", op, "");
 }
