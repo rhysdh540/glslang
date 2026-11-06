@@ -1563,7 +1563,9 @@ storage_qualifier
     }
     | PATCH {
         parseContext.globalCheck($1.loc, "patch");
-        parseContext.requireStage($1.loc, (EShLanguageMask)(EShLangTessControlMask | EShLangTessEvaluationMask), "patch");
+        if (parseContext.language != EShLangGeometry ||
+            !(parseContext.symbolTable.atBuiltInLevel() || parseContext.extensionTurnedOn(E_GL_NV_gpu_shader5)))
+            parseContext.requireStage($1.loc, (EShLanguageMask)(EShLangTessControlMask | EShLangTessEvaluationMask), "patch");
         $$.init($1.loc);
         $$.qualifier.patch = true;
     }

@@ -1190,6 +1190,8 @@ void TParseVersions::updateExtensionBehavior(int line, const char* extension, co
         intermediate.updateNumericFeature(TNumericFeatures::gpu_shader_half_float, on);
     else if (strcmp(extension, "GL_NV_gpu_shader5") == 0) {
         intermediate.updateNumericFeature(TNumericFeatures::nv_gpu_shader5_types, on);
+        if (!isEsProfile())
+            updateExtensionBehavior(line, "GL_ARB_gpu_shader5", behaviorString);
     }
 }
 

@@ -1503,7 +1503,8 @@ int TScanContext::tokenizeIdentifier()
         if (parseContext.symbolTable.atBuiltInLevel() ||
             parseContext.extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types) ||
             (parseContext.extensionTurnedOn(E_GL_NV_gpu_shader5) &&
-             parseContext.extensionTurnedOn(E_GL_ARB_gpu_shader_fp64)) ||
+             (parseContext.extensionTurnedOn(E_GL_ARB_gpu_shader_fp64) ||
+              (!parseContext.isEsProfile() && parseContext.version >= 400))) ||
              parseContext.extensionTurnedOn(E_GL_EXT_shader_explicit_arithmetic_types_float64)) {
             afterType = true;
             return keyword;

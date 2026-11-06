@@ -352,6 +352,7 @@ enum TLayoutGeometry {
     ElgTriangleStrip,
     ElgQuads,
     ElgIsolines,
+    ElgPatches,
 };
 
 enum TVertexSpacing {
@@ -1314,6 +1315,7 @@ public:
         case ElgTriangleStrip:      return "triangle_strip";
         case ElgQuads:              return "quads";
         case ElgIsolines:           return "isolines";
+        case ElgPatches:            return "patches";
         default:                    return "none";
         }
     }

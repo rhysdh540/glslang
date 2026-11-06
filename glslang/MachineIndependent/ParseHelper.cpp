@@ -886,7 +886,8 @@ int TParseContext::getIoArrayImplicitSize(const TQualifier &qualifier, TString *
     unsigned int maxVertices = intermediate.getVertices() != TQualifier::layoutNotSet ? intermediate.getVertices() : 0;
 
     if (language == EShLangGeometry) {
-        expectedSize = TQualifier::mapGeometryToSize(intermediate.getInputPrimitive());
+        expectedSize = intermediate.getInputPrimitive() == ElgPatches ? resources.maxPatchVertices
+                                                                      : TQualifier::mapGeometryToSize(intermediate.getInputPrimitive());
         str = TQualifier::getGeometryString(intermediate.getInputPrimitive());
     }
     else if (language == EShLangTessControl) {
@@ -7713,6 +7714,11 @@ void TParseContext::setLayoutQualifier(const TSourceLoc& loc, TPublicType& publi
                     publicType.shaderQualifiers.geometry = ElgTriangleStrip;
                     return;
                 }
+                if (id == TQualifier::getGeometryString(ElgPatches)) {
+                    requireExtensions(loc, 1, &E_GL_NV_gpu_shader5, "patches");
+                    publicType.shaderQualifiers.geometry = ElgPatches;
+                    return;
+                }
                 if (id == "passthrough") {
                     requireExtensions(loc, 1, &E_SPV_NV_geometry_shader_passthrough, "geometry shader passthrough");
                     publicType.qualifier.layoutPassthrough = true;
@@ -12403,6 +12409,7 @@ void TParseContext::updateStandaloneQualifierDefaults(const TSourceLoc& loc, con
             case ElgTrianglesAdjacency:
             case ElgQuads:
             case ElgIsolines:
+            case ElgPatches:
                 if (language == EShLangMesh) {
                     error(loc, "cannot apply to input", TQualifier::getGeometryString(publicType.shaderQualifiers.geometry), "");
                     break;

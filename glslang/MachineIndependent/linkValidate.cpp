@@ -1132,7 +1132,7 @@ void TIntermediate::mergeLinkerObjects(TInfoSink& infoSink, TIntermSequence& lin
         }
 
         // Check conflicts between preset primitives and sizes of I/O variables among multiple geometry shaders
-        if (language == EShLangGeometry && unitStage == EShLangGeometry)
+        if (language == EShLangGeometry && unitStage == EShLangGeometry && getInputPrimitive() != ElgPatches)
         {
             TIntermSymbol* unitSymbol = unitLinkerObjects[unitLinkObj]->getAsSymbolNode();
             if (unitSymbol->isArray() && unitSymbol->getQualifier().storage == EvqVaryingIn && unitSymbol->getQualifier().builtIn == EbvNone)

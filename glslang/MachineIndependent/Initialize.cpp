@@ -6635,6 +6635,13 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
 
         if (version >= 150)
             stageBuiltins[EShLangGeometry].append(
+            "in int gl_PatchVerticesIn;"
+            "patch in float gl_TessLevelOuter[4];"
+            "patch in float gl_TessLevelInner[2];"
+            );
+
+        if (version >= 150)
+            stageBuiltins[EShLangGeometry].append(
             "out int gl_ViewportIndex;"
             );
 
@@ -9468,6 +9475,14 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
         BuiltInVariable("gl_PrimitiveIDIn",   EbvPrimitiveId,    symbolTable);
         BuiltInVariable("gl_PrimitiveID",     EbvPrimitiveId,    symbolTable);
         BuiltInVariable("gl_InvocationID",    EbvInvocationId,   symbolTable);
+        if (language == EShLangGeometry && profile != EEsProfile) {
+            BuiltInVariable("gl_PatchVerticesIn", EbvPatchVertices,  symbolTable);
+            BuiltInVariable("gl_TessLevelOuter",  EbvTessLevelOuter, symbolTable);
+            BuiltInVariable("gl_TessLevelInner",  EbvTessLevelInner, symbolTable);
+            symbolTable.setVariableExtensions("gl_PatchVerticesIn", 1, &E_GL_NV_gpu_shader5);
+            symbolTable.setVariableExtensions("gl_TessLevelOuter",  1, &E_GL_NV_gpu_shader5);
+            symbolTable.setVariableExtensions("gl_TessLevelInner",  1, &E_GL_NV_gpu_shader5);
+        }
         BuiltInVariable("gl_Layer",           EbvLayer,          symbolTable);
         BuiltInVariable("gl_ViewportIndex",   EbvViewportIndex,  symbolTable);
 

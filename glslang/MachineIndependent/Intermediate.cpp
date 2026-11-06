@@ -1927,6 +1927,21 @@ std::tuple<TBasicType, TBasicType> TIntermediate::getConversionDestinationType(T
         }
     }
 
+    if (res0 == EbtNumTypes && numericFeatures.contains(TNumericFeatures::nv_gpu_shader5_types) &&
+        (isTypeInt(type0) || isTypeFloat(type0)) && (isTypeInt(type1) || isTypeFloat(type1))) {
+        const bool floating = isTypeFloat(type0) || isTypeFloat(type1);
+        const bool unsign = isTypeUnsignedInt(type0) || isTypeUnsignedInt(type1);
+        const TBasicType narrow = floating ? EbtFloat : (unsign ? EbtUint : EbtInt);
+        const TBasicType wide = floating ? EbtDouble : (unsign ? EbtUint64 : EbtInt64);
+        for (TBasicType to : {narrow, wide}) {
+            if ((type0 == to || canImplicitlyPromote(type0, to, op)) && (type1 == to || canImplicitlyPromote(type1, to, op))) {
+                res0 = to;
+                res1 = to;
+                break;
+            }
+        }
+    }
+
     return std::make_tuple(res0, res1);
 }
 
