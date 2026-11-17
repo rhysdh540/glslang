@@ -379,7 +379,7 @@ primary_expression
     }
     | LEFT_PAREN expression RIGHT_PAREN {
         $$ = $2;
-        if ($$->getAsConstantUnion())
+        if ($$->getAsConstantUnion() && parseContext.isEsProfile())
             $$->getAsConstantUnion()->setExpression();
     }
     | FLOATCONSTANT {

@@ -5921,7 +5921,7 @@ yyreduce:
 #line 380 "glslang.y"
                                         {
         (yyval.interm.intermTypedNode) = (yyvsp[-1].interm.intermTypedNode);
-        if ((yyval.interm.intermTypedNode)->getAsConstantUnion())
+        if ((yyval.interm.intermTypedNode)->getAsConstantUnion() && parseContext.isEsProfile())
             (yyval.interm.intermTypedNode)->getAsConstantUnion()->setExpression();
     }
 #line 5928 "glslang_tab.cpp"
