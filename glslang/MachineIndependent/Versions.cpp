@@ -1274,7 +1274,7 @@ void TParseVersions::extensionRequires(const TSourceLoc &loc, const char * const
     else if (!strcmp("enable", behaviorString))
         isEnabled = true;
 
-    if (isEnabled) {
+    if (isEnabled && spvVersion.spv != 0) {
         unsigned int minSpvVersion = 0;
         auto iter = extensionMinSpv.find(TString(extension));
         if (iter != extensionMinSpv.end())
