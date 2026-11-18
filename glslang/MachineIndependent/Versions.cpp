@@ -448,6 +448,7 @@ void TParseVersions::initializeExtensionBehavior()
     extensionBehavior[E_GL_EXT_shader_subgroup_extended_types_float16] = EBhDisable;
     extensionBehavior[E_GL_EXT_shader_atomic_float]                    = EBhDisable;
     extensionBehavior[E_GL_EXT_shader_atomic_float2]                   = EBhDisable;
+    extensionBehavior[E_GL_NV_shader_atomic_float]                     = EBhDisable;
 
     extensionBehavior[E_GL_EXT_integer_dot_product]                    = EBhDisable;
 
@@ -681,6 +682,7 @@ void TParseVersions::getPreamble(std::string& preamble)
 
             "#define GL_EXT_shader_atomic_float 1\n"
             "#define GL_EXT_shader_atomic_float2 1\n"
+            "#define GL_NV_shader_atomic_float 1\n"
 
             "#define GL_EXT_fragment_shader_barycentric 1\n"
             "#define GL_EXT_shader_quad_control 1\n"
@@ -1129,6 +1131,8 @@ void TParseVersions::updateExtensionBehavior(int line, const char* extension, co
         updateExtensionBehavior(line, "GL_GOOGLE_cpp_style_line_directive", behaviorString);
     else if (strcmp(extension, "GL_ARB_shading_language_include") == 0)
         updateExtensionBehavior(line, "GL_GOOGLE_cpp_style_line_directive", behaviorString);
+    else if (strcmp(extension, "GL_NV_shader_atomic_float") == 0)
+        updateExtensionBehavior(line, "GL_EXT_shader_atomic_float", behaviorString);
     // subgroup_* to subgroup_basic
     else if (strcmp(extension, "GL_KHR_shader_subgroup_vote") == 0)
         updateExtensionBehavior(line, "GL_KHR_shader_subgroup_basic", behaviorString);
