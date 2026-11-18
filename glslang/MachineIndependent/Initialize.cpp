@@ -1546,6 +1546,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
             "  double atomicExchange(coherent volatile nontemporal inout double, double, int, int, int);"
 
             "uint64_t atomicCompSwap(coherent volatile nontemporal inout uint64_t, uint64_t, uint64_t);"
+            "   float atomicCompSwap(coherent volatile nontemporal inout float, float, float);"
             " int64_t atomicCompSwap(coherent volatile nontemporal inout  int64_t,  int64_t,  int64_t);"
             "uint64_t atomicCompSwap(coherent volatile nontemporal inout uint64_t, uint64_t, uint64_t, int, int, int, int, int);"
             " int64_t atomicCompSwap(coherent volatile nontemporal inout  int64_t,  int64_t,  int64_t, int, int, int, int, int);"

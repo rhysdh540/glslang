@@ -383,6 +383,7 @@ const char* const E_GL_EXT_terminate_invocation = "GL_EXT_terminate_invocation";
 const char* const E_GL_EXT_shader_atomic_float = "GL_EXT_shader_atomic_float";
 const char* const E_GL_EXT_shader_atomic_float2 = "GL_EXT_shader_atomic_float2";
 const char* const E_GL_NV_shader_atomic_float = "GL_NV_shader_atomic_float";
+const char* const E_GL_INTEL_shader_atomic_float_minmax = "GL_INTEL_shader_atomic_float_minmax";
 
 const char* const E_GL_EXT_shader_tile_image = "GL_EXT_shader_tile_image";
 

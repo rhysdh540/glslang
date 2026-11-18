@@ -3977,6 +3977,8 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
                    arg0->getType().getBasicType() == EbtFloat16 &&
                    (arg0->getType().getVectorSize() == 2 || arg0->getType().getVectorSize() == 4 )) {
             requireExtensions(loc, 1, &E_GL_NV_shader_atomic_fp16_vector, fnCandidate.getName().c_str());
+        } else if (callNode.getOp() == EOpAtomicCompSwap && arg0->getType().getBasicType() == EbtFloat) {
+            requireExtensions(loc, 1, &E_GL_INTEL_shader_atomic_float_minmax, fnCandidate.getName().c_str());
         } else if ((callNode.getOp() == EOpAtomicAdd || callNode.getOp() == EOpAtomicExchange) &&
                    (arg0->getType().getBasicType() == EbtFloat ||
                     arg0->getType().getBasicType() == EbtDouble)) {
