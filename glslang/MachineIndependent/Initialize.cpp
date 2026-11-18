@@ -4748,12 +4748,14 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     // Builtins for GL_EXT_texture_shadow_lod
     if ((profile == EEsProfile && version >= 300) || ((profile != EEsProfile && version >= 130))) {
         commonBuiltins.append(
-            "float texture(sampler2DArrayShadow, vec4, float);"
-            "float texture(samplerCubeArrayShadow, vec4, float, float);"
             "float textureLod(sampler2DArrayShadow, vec4, float);"
             "float textureLod(samplerCubeShadow, vec4, float);"
             "float textureLod(samplerCubeArrayShadow, vec4, float, float);"
             "float textureLodOffset(sampler2DArrayShadow, vec4, float, ivec2);"
+            "\n");
+        stageBuiltins[EShLangFragment].append(
+            "float texture(sampler2DArrayShadow, vec4, float);"
+            "float texture(samplerCubeArrayShadow, vec4, float, float);"
             "float textureOffset(sampler2DArrayShadow, vec4 , ivec2, float);"
             "\n");
     }
