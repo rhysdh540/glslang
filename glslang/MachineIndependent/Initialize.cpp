@@ -1183,7 +1183,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
         "\n");
     }
 
-    if ((profile != EEsProfile && version >= 450) || (profile == EEsProfile && version >= 310)) {
+    if ((profile != EEsProfile && version >= 400) || (profile == EEsProfile && version >= 310)) {
         commonBuiltins.append(
 
             "int64_t abs(int64_t);"
@@ -1352,7 +1352,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     }
 
     // GL_AMD_shader_trinary_minmax
-    if (profile != EEsProfile && version >= 430) {
+    if (profile != EEsProfile) {
         commonBuiltins.append(
             "float min3(float, float, float);"
             "vec2  min3(vec2,  vec2,  vec2);"
@@ -2282,7 +2282,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     }
 
     // GL_ARB_shader_ballot
-    if (profile != EEsProfile && version >= 450) {
+    if (profile != EEsProfile && version >= 400) {
         commonBuiltins.append(
             "uint64_t ballotARB(bool);"
 
@@ -3778,7 +3778,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     }
 
     if ((profile == EEsProfile && version >= 300 && version < 310) ||
-        (profile != EEsProfile && version >= 150 && version < 450)) { // GL_EXT_shader_integer_mix
+        (profile != EEsProfile && version >= 130 && version < 450)) { // GL_EXT_shader_integer_mix
         commonBuiltins.append("int mix(int, int, bool);"
                               "ivec2 mix(ivec2, ivec2, bvec2);"
                               "ivec3 mix(ivec3, ivec3, bvec3);"
@@ -3796,7 +3796,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     }
 
     // GL_AMD_gpu_shader_half_float/Explicit types
-    if ((profile != EEsProfile && version >= 450) || (profile == EEsProfile && version >= 310)) {
+    if ((profile != EEsProfile && version >= 400) || (profile == EEsProfile && version >= 310)) {
         commonBuiltins.append(
             "float16_t radians(float16_t);"
             "f16vec2   radians(f16vec2);"
@@ -4292,7 +4292,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     }
 
     // Explicit types
-    if ((profile != EEsProfile && version >= 450) || (profile == EEsProfile && version >= 310)) {
+    if ((profile != EEsProfile && version >= 400) || (profile == EEsProfile && version >= 310)) {
         commonBuiltins.append(
             "int8_t abs(int8_t);"
             "i8vec2 abs(i8vec2);"
@@ -5669,7 +5669,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     }
 
     // GL_AMD_gpu_shader_half_float
-    if (profile != EEsProfile && version >= 450) {
+    if (profile != EEsProfile && version >= 400) {
         stageBuiltins[EShLangFragment].append(derivativesAndControl16bits);
         stageBuiltins[EShLangFragment].append("\n");
 
@@ -7133,7 +7133,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
     }
 
     // GL_ARB_shader_ballot
-    if (profile != EEsProfile && version >= 450) {
+    if (profile != EEsProfile && version >= 400) {
         const char* ballotDecls =
             "uniform uint gl_SubGroupSizeARB;"
             "in uint     gl_SubGroupInvocationARB;"
@@ -9887,16 +9887,18 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
 
         // E_GL_NV_gpu_shader5
         if (profile != EEsProfile && version < 450) {
-            symbolTable.setFunctionExtensions("packInt2x32",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("packUint2x32",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("unpackInt2x32",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("unpackUint2x32",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("packFloat2x16",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("unpackFloat2x16",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("doubleBitsToInt64",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("doubleBitsToUint64",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("int64BitsToDouble",     1, &E_GL_NV_gpu_shader5);
-            symbolTable.setFunctionExtensions("uint64BitsToDouble",     1, &E_GL_NV_gpu_shader5);
+            const char* const int64Exts[] = { E_GL_NV_gpu_shader5, E_GL_ARB_gpu_shader_int64 };
+            const char* const float16Exts[] = { E_GL_NV_gpu_shader5, E_GL_AMD_gpu_shader_half_float };
+            symbolTable.setFunctionExtensions("packInt2x32",     2, int64Exts);
+            symbolTable.setFunctionExtensions("packUint2x32",     2, int64Exts);
+            symbolTable.setFunctionExtensions("unpackInt2x32",     2, int64Exts);
+            symbolTable.setFunctionExtensions("unpackUint2x32",     2, int64Exts);
+            symbolTable.setFunctionExtensions("packFloat2x16",     2, float16Exts);
+            symbolTable.setFunctionExtensions("unpackFloat2x16",     2, float16Exts);
+            symbolTable.setFunctionExtensions("doubleBitsToInt64",     2, int64Exts);
+            symbolTable.setFunctionExtensions("doubleBitsToUint64",     2, int64Exts);
+            symbolTable.setFunctionExtensions("int64BitsToDouble",     2, int64Exts);
+            symbolTable.setFunctionExtensions("uint64BitsToDouble",     2, int64Exts);
         }
 
         // E_GL_ARB_shader_atomic_counter_ops
