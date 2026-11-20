@@ -818,13 +818,26 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, const TType& returnType) 
                 newConstArray[i].setDConst(fabs(unionArray[i].getDConst()));
             else if (unionArray[i].getType() == EbtInt)
                 newConstArray[i].setIConst(abs(unionArray[i].getIConst()));
-            else
+            else if (unionArray[i].getType() == EbtInt8)
+                newConstArray[i].setI8Const(static_cast<signed char>(abs(unionArray[i].getI8Const())));
+            else if (unionArray[i].getType() == EbtInt16)
+                newConstArray[i].setI16Const(static_cast<short>(abs(unionArray[i].getI16Const())));
+            else if (unionArray[i].getType() == EbtInt64) {
+                long long i64val = unionArray[i].getI64Const();
+                newConstArray[i].setI64Const(i64val < 0 && i64val != INT64_MIN ? -i64val : i64val);
+            } else
                 newConstArray[i] = unionArray[i];
             break;
         case EOpSign:
             #define SIGN(X) (X == 0 ? 0 : (X < 0 ? -1 : 1))
             if (unionArray[i].getType() == EbtDouble)
                 newConstArray[i].setDConst(SIGN(unionArray[i].getDConst()));
+            else if (unionArray[i].getType() == EbtInt8)
+                newConstArray[i].setI8Const(SIGN(unionArray[i].getI8Const()));
+            else if (unionArray[i].getType() == EbtInt16)
+                newConstArray[i].setI16Const(SIGN(unionArray[i].getI16Const()));
+            else if (unionArray[i].getType() == EbtInt64)
+                newConstArray[i].setI64Const(SIGN(unionArray[i].getI64Const()));
             else
                 newConstArray[i].setIConst(SIGN(unionArray[i].getIConst()));
             break;
