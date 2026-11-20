@@ -407,6 +407,8 @@ void TParseVersions::initializeExtensionBehavior()
     extensionBehavior[E_GL_EXT_shader_quad_control]         = EBhDisable;
     extensionBehavior[E_GL_EXT_ray_tracing_position_fetch]  = EBhDisable;
     extensionBehavior[E_GL_EXT_shader_tile_image]           = EBhDisable;
+    extensionBehavior[E_GL_EXT_shader_framebuffer_fetch]    = EBhDisable;
+    extensionBehavior[E_GL_EXT_shader_framebuffer_fetch_non_coherent] = EBhDisable;
     extensionBehavior[E_GL_EXT_texture_shadow_lod]          = EBhDisable;
     extensionBehavior[E_GL_EXT_draw_instanced]              = EBhDisable;
     extensionBehavior[E_GL_EXT_texture_array]               = EBhDisable;
@@ -776,6 +778,8 @@ void TParseVersions::getPreamble(std::string& preamble)
             "#define GL_GOOGLE_cpp_style_line_directive 1\n"
             "#define GL_GOOGLE_include_directive 1\n"
             "#define GL_KHR_blend_equation_advanced 1\n"
+            "#define GL_EXT_shader_framebuffer_fetch 1\n"
+            "#define GL_EXT_shader_framebuffer_fetch_non_coherent 1\n"
             ;
 
     // other general extensions

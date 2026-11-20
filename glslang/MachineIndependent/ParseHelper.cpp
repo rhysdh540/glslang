@@ -5784,6 +5784,14 @@ void TParseContext::globalQualifierFixCheck(const TSourceLoc& loc, TQualifier& q
             qualifier.invariant = true;
         break;
     case EvqInOut:
+        if (language == EShLangFragment && (extensionTurnedOn(E_GL_EXT_shader_framebuffer_fetch) ||
+                                            extensionTurnedOn(E_GL_EXT_shader_framebuffer_fetch_non_coherent))) {
+            profileRequires(loc, ENoProfile, 130, nullptr, "inout for fragment outputs");
+            profileRequires(loc, EEsProfile, 300, nullptr, "inout for fragment outputs");
+            qualifier.storage = EvqVaryingOut;
+            qualifier.fetched = true;
+            break;
+        }
         qualifier.storage = EvqVaryingIn;
         error(loc, "cannot use 'inout' at global scope", "", "");
         break;
@@ -6083,6 +6091,7 @@ void TParseContext::mergeQualifiers(const TSourceLoc& loc, TQualifier& dst, cons
     MERGE_SINGLETON(perTaskNV);
     MERGE_SINGLETON(patch);
     MERGE_SINGLETON(sample);
+    MERGE_SINGLETON(fetched);
     MERGE_SINGLETON(coherent);
     MERGE_SINGLETON(devicecoherent);
     MERGE_SINGLETON(queuefamilycoherent);
@@ -7873,6 +7882,10 @@ void TParseContext::setLayoutQualifier(const TSourceLoc& loc, TPublicType& publi
                 publicType.shaderQualifiers.earlyFragmentTests = true;
             }
             publicType.shaderQualifiers.postDepthCoverage = true;
+            return;
+        }
+        if (id == "noncoherent") {
+            requireExtensions(loc, 1, &E_GL_EXT_shader_framebuffer_fetch_non_coherent, "noncoherent");
             return;
         }
         /* id is transformed into lower case in the beginning of this function. */

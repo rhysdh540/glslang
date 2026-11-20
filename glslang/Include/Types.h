@@ -553,6 +553,7 @@ public:
         clearInterpolation();
         patch = false;
         sample = false;
+        fetched = false;
     }
 
     void clearInterpolation()
@@ -612,6 +613,7 @@ public:
     bool perTaskNV : 1;
     bool patch        : 1;
     bool sample       : 1;
+    bool fetched      : 1;
     bool restrict     : 1;
     bool readonly     : 1;
     bool writeonly    : 1;

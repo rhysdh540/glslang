@@ -386,6 +386,8 @@ const char* const E_GL_NV_shader_atomic_float = "GL_NV_shader_atomic_float";
 const char* const E_GL_INTEL_shader_atomic_float_minmax = "GL_INTEL_shader_atomic_float_minmax";
 
 const char* const E_GL_EXT_shader_tile_image = "GL_EXT_shader_tile_image";
+const char* const E_GL_EXT_shader_framebuffer_fetch = "GL_EXT_shader_framebuffer_fetch";
+const char* const E_GL_EXT_shader_framebuffer_fetch_non_coherent = "GL_EXT_shader_framebuffer_fetch_non_coherent";
 
 const char* const E_GL_EXT_texture_shadow_lod = "GL_EXT_texture_shadow_lod";
 
