@@ -153,6 +153,7 @@ const char* const E_GL_ARB_cull_distance                = "GL_ARB_cull_distance"
 const char* const E_GL_ARB_post_depth_coverage          = "GL_ARB_post_depth_coverage";
 const char* const E_GL_ARB_shader_viewport_layer_array  = "GL_ARB_shader_viewport_layer_array";
 const char* const E_GL_ARB_fragment_shader_interlock    = "GL_ARB_fragment_shader_interlock";
+const char* const E_GL_ARB_ES3_2_compatibility          = "GL_ARB_ES3_2_compatibility";
 const char* const E_GL_ARB_shader_clock                 = "GL_ARB_shader_clock";
 const char* const E_GL_ARB_uniform_buffer_object        = "GL_ARB_uniform_buffer_object";
 const char* const E_GL_ARB_sample_shading               = "GL_ARB_sample_shading";

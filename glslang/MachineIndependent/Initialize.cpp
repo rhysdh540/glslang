@@ -6764,6 +6764,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
 
             "patch out float gl_TessLevelOuter[4];"
             "patch out float gl_TessLevelInner[2];"
+            "patch out vec4 gl_BoundingBox[2];"
             "\n");
 
         if (version >= 410)
@@ -9440,6 +9441,10 @@ void TBuiltIns::identifyBuiltIns(int version, EProfile profile, const SpvVersion
             if (version >= 320) {
                 BuiltInVariable("gl_BoundingBox", EbvBoundingBox, symbolTable);
             }
+        }
+        if (profile != EEsProfile && language == EShLangTessControl) {
+            BuiltInVariable("gl_BoundingBox", EbvBoundingBox, symbolTable);
+            symbolTable.setVariableExtensions("gl_BoundingBox", 1, &E_GL_ARB_ES3_2_compatibility);
         }
         [[fallthrough]];
 
